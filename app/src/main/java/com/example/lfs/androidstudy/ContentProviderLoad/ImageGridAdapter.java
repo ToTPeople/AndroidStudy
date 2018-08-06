@@ -32,13 +32,17 @@ class ImageGridAdapter extends BaseAdapter implements AbsListView.OnScrollListen
 
 
     public ImageGridAdapter(Context context, List<String> data, GridView listView){
+        if (null != listData) {
+            listData.clear();
+        }
         this.context = context;
         listData = data;
         mListView = listView;
         mListView.setOnScrollListener(this);
         isFirstIn = true;
 
-        ImageLoadHelper.getInstance().init(data, listView);
+        ImageLoadHelper.getInstance().init(listData, mListView);
+        Log.i("Init", "[ImageGridAdapter] data size is: " + listData.size());
         mListView.setOnScrollListener(this);
     }
 
@@ -74,7 +78,7 @@ class ImageGridAdapter extends BaseAdapter implements AbsListView.OnScrollListen
         }
 
         String path = listData.get(i);
-//        if (new File(path).exists()) {
+        if (null != path) {
             Log.i("Scroll", "item index: " + i);
 
             imageView.setTag(path);
@@ -84,7 +88,7 @@ class ImageGridAdapter extends BaseAdapter implements AbsListView.OnScrollListen
 //            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND);
 //            bitmap = ThumbnailUtils.extractThumbnail(bitmap, 300, 250);
 //            imageView.setImageBitmap(bitmap);
-//        }
+        }
 
         return view;
     }

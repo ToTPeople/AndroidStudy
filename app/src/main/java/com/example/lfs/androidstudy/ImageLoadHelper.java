@@ -56,10 +56,12 @@ public class ImageLoadHelper {
         for (int i = 0; i < tot; ++i) {
             mPaths[i] = data.get(i);
         }
+        Log.i("Init", "[ImageLoadHelper:init] data size is: " + tot);
     }
 
     // get/set image from Lru
     public Bitmap getBitmapFromLrucache(String path) {
+        Log.i("Web", "load path is: " + path);
         return mMemoryCaches.get(path);
     }
     public void addBitmapToLrucaches(String path, Bitmap bitmap) {
@@ -70,10 +72,10 @@ public class ImageLoadHelper {
 
 
     public void loadImages(int start, int end) {
-
+        Log.i("Init", "[ImageLoadHelper:loadImages] end index is: " + end);
         for (int i = start; i < end; ++i) {
             String path = mPaths[i];
-            if (getBitmapFromLrucache(path) != null) {
+            if (null != path && getBitmapFromLrucache(path) != null) {
                 ImageView imageView = (ImageView) mListView.findViewWithTag(path);
 
                 Log.i("loadImage", "start, end, imageView: " + start + ", " + end + ", " + imageView);

@@ -1,11 +1,17 @@
 package com.example.lfs.androidstudy;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +24,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.lfs.androidstudy.ContentProviderLoad.DataLoadService;
+import com.example.lfs.androidstudy.ContentProviderLoad.NetDataLoadIntentService;
 import com.example.lfs.androidstudy.ContentProviderLoad.ResourseModel;
 import com.example.lfs.androidstudy.InternalStorageDemo.InternalStorageDemo;
 
@@ -31,13 +39,42 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ServiceConnection {
     private Button btnInterStorage;
     private Button btnExterStorage;
     private Button btnResourceModel;
     private ImageView imageView;
+    private static boolean hasDataLoaded = false;
+    private boolean hasBindService = false;
+    private boolean hasNetDataLoadComplete = false;
 
     final public static int REQUEST_CODE_ASK_EXTERNAL_STORAGE = 123;
+
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if (null != bundle) {
+                int resultCode = bundle.getInt(DataLoadService.RESULT);
+                if (RESULT_OK == resultCode) {
+                    hasNetDataLoadComplete = true;
+                    Toast.makeText(MainActivity.this, "Network data load complete!!!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Network data load error!!!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    };
+
+    // 启动服务加载数据
+    private void startPreparedData() {
+        hasBindService = true;
+//        Intent intent = new Intent(MainActivity.this, NetDataLoadIntentService.class);
+        Intent intent = new Intent(MainActivity.this, DataLoadService.class);
+//        startService(intent);
+        bindService(intent, MainActivity.this, Context.BIND_AUTO_CREATE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +97,16 @@ public class MainActivity extends AppCompatActivity {
         if (!permissionList.isEmpty()) {
             ActivityCompat.requestPermissions(MainActivity.this, permissionList.toArray(new String[permissionList.size()]), REQUEST_CODE_ASK_EXTERNAL_STORAGE);
         } else {
-//            ResourceLoad.getInstance().getImages();
-            ResourceLoad.getInstance().getUrlJsonData();
+            if (!hasDataLoaded) {
+                hasDataLoaded = true;
+                // 启动服务加载数据
+                startPreparedData();
+            }
         }
 //        testParserJson();
 //        ResourceLoad.getInstance();
+
+        registerReceiver(receiver, new IntentFilter());
 
         btnInterStorage = findViewById(R.id.btnInterStorage);
         if (null != btnInterStorage) {
@@ -84,17 +126,27 @@ public class MainActivity extends AppCompatActivity {
             btnResourceModel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, ResourseModel.class);
-                    startActivity(intent);
+//                    if (hasNetDataLoadComplete) {
+                        Intent intent = new Intent(MainActivity.this, ResourseModel.class);
+                        startActivity(intent);
 
 //                    String path = "http://04.imgmini.eastday.com/mobile/20180803/20180803145041_2afaa556716c3f05a9f1cf9c580a107c_1_mwpm_03200403.jpg";
 //                    new my_NewsAsyncTask(path, imageView).execute(path);
+//                    } else {
+//                        Toast.makeText(MainActivity.this, "Network data loading, please wait...", Toast.LENGTH_LONG);
+//                    }
                 }
             });
         }
 
         imageView = findViewById(R.id.imageView);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(receiver);
+        super.onDestroy();
     }
 
     @Override
@@ -114,8 +166,11 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     if (isSuccess) {
-//                        ResourceLoad.getInstance().getImages();
-                        ResourceLoad.getInstance().getUrlJsonData();
+                        if (!hasDataLoaded) {
+                            hasDataLoaded = true;
+                            // 启动服务加载数据
+                            startPreparedData();
+                        }
                     }
                 }
             }
@@ -123,6 +178,16 @@ public class MainActivity extends AppCompatActivity {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        //
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+        //
     }
 
     private void testParserJson() {

@@ -3,6 +3,7 @@ package com.example.lfs.androidstudy;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
@@ -10,6 +11,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.example.lfs.androidstudy.ContentProviderLoad.DataLoadService;
 import com.example.lfs.androidstudy.data.NewsInfo;
 
 import org.json.JSONArray;
@@ -33,7 +35,6 @@ import java.util.List;
  */
 
 public class ResourceLoad {
-
     public boolean has_load_image = false;
     public boolean has_load_video = false;
     public boolean has_load_file = false;
@@ -62,7 +63,7 @@ public class ResourceLoad {
             switch (msg.what) {
                 case SCAN_OK:
                     //扫描完毕,关闭进度dialog
-                    mProgressDialog.dismiss();
+//                    mProgressDialog.dismiss();
                     parserJson();
                     break;
             }
@@ -72,7 +73,7 @@ public class ResourceLoad {
 
     public void getUrlJsonData() {
         //显示进度dialog
-        mProgressDialog = ProgressDialog.show(context, null, "正在加载...");
+//        mProgressDialog = ProgressDialog.show(context, null, "正在加载...");
 
         new Thread(new Runnable() {
             @Override
@@ -140,7 +141,6 @@ public class ResourceLoad {
                     //通知Handler扫描图片完成
                     mHandler.sendEmptyMessage(SCAN_OK);
                     Log.i("Web", urlText);
-                    parserJson();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -164,6 +164,7 @@ public class ResourceLoad {
                             JSONArray datas = result.getJSONArray("data");
                             int len = datas.length();
                             JSONObject tmpJsonObj;
+                            String path;
                             for (int i = 0; i < len; ++i) {
                                 tmpJsonObj = datas.getJSONObject(i);
                                 NewsInfo tmpNewsInfo = new NewsInfo();
@@ -183,22 +184,28 @@ public class ResourceLoad {
                                     tmpNewsInfo.setmUrl(tmpJsonObj.getString("url"));
                                 }
                                 if (tmpJsonObj.has("thumbnail_pic_s")) {
-                                    tmpNewsInfo.setmThumbnail_pic_s(tmpJsonObj.getString("thumbnail_pic_s"));
-                                    fileList.add(tmpJsonObj.getString("thumbnail_pic_s"));
+                                    path = tmpJsonObj.getString("thumbnail_pic_s");
+                                    tmpNewsInfo.setmThumbnail_pic_s(path);
+                                    fileList.add(path);
                                 }
                                 if (tmpJsonObj.has("thumbnail_pic_s02")) {
-                                    tmpNewsInfo.setmThumbnail_pic_s02(tmpJsonObj.getString("thumbnail_pic_s02"));
-                                    fileList.add(tmpJsonObj.getString("thumbnail_pic_s02"));
+                                    path = tmpJsonObj.getString("thumbnail_pic_s02");
+                                    tmpNewsInfo.setmThumbnail_pic_s02(path);
+                                    fileList.add(path);
                                 }
                                 if (tmpJsonObj.has("thumbnail_pic_s03")) {
-                                    tmpNewsInfo.setmThumbnail_pic_s03(tmpJsonObj.getString("thumbnail_pic_s03"));
-                                    fileList.add(tmpJsonObj.getString("thumbnail_pic_s03"));
+                                    path = tmpJsonObj.getString("thumbnail_pic_s03");
+                                    tmpNewsInfo.setmThumbnail_pic_s03(path);
+                                    fileList.add(path);
                                 }
                             }
                         }
                     }
                 }
             }
+
+            //
+            DataLoadService.dataHandler.sendEmptyMessage(DataLoadService.NET_DATA_LOADED);
 
         } catch (Exception e) {
             e.printStackTrace();
