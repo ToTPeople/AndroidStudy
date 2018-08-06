@@ -10,13 +10,19 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.example.lfs.androidstudy.data.NewsInfo;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -72,22 +78,53 @@ public class ResourceLoad {
             @Override
             public void run() {
                 try {
+                    boolean use_get = true;
+                    use_get = false;
+
                     String url_s = "http://v.juhe.cn/toutiao/index?type=keji&key=71197f609745fc5bcd254a7c73988994"; // 科技
                             // "http://v.juhe.cn/toutiao/index?type=guoji&key=71197f609745fc5bcd254a7c73988994";    // 国际
                             //"http://v.juhe.cn/toutiao/index?type=top&key=71197f609745fc5bcd254a7c73988994";   // 头条
+                    if (!use_get) {
+                        url_s = "http://v.juhe.cn/toutiao/index";
+                    }
+
                     URL url = new URL(url_s);
                     HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-                    httpURLConnection.setRequestMethod("GET");
-                    httpURLConnection.setConnectTimeout(8000);
-                    httpURLConnection.setReadTimeout(8000);
-                    Log.i("Web", "------------ 1- ------------");
-                    // connect
-                    httpURLConnection.connect();
-                    Log.i("Web", "------------ 2- ------------");
+
+                    if (use_get) {
+                        httpURLConnection.setRequestMethod("GET");
+                        httpURLConnection.setConnectTimeout(8000);
+                        httpURLConnection.setReadTimeout(8000);
+                        Log.i("Web", "------------ 1- ------------");
+                        // connect
+                        httpURLConnection.connect();
+                        Log.i("Web", "------------ 2- ------------");
+                    } else {
+                        httpURLConnection.setRequestMethod("POST");
+                        httpURLConnection.setDoOutput(true);
+                        httpURLConnection.setDoInput(true);
+                        httpURLConnection.setUseCaches(false);
+                        httpURLConnection.setInstanceFollowRedirects(true);
+                        httpURLConnection.connect();
+
+                        // output写到上传内容（参数），推到web
+                        OutputStream outputStream = httpURLConnection.getOutputStream();
+                        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, "UTF-8");
+                        BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+                        bufferedWriter.write("type=keji&key=71197f609745fc5bcd254a7c73988994");
+
+                        bufferedWriter.flush();
+
+                        bufferedWriter.close();
+                        outputStream.close();
+                    }
+
+
+                    // 读取web返回数据
                     InputStream inputStream = httpURLConnection.getInputStream();
                     InputStreamReader input = new InputStreamReader(inputStream);
                     BufferedReader bufferedReader = new BufferedReader(input);
-                    if (httpURLConnection.getResponseCode() == 200) {   // 200意味着返回的是"OK"
+                    if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {   // 200意味着返回的是"OK"
                         String inputLine;
                         Log.i("Web", "------------ 3- ------------");
                         StringBuffer resultData = new StringBuffer();
@@ -113,7 +150,10 @@ public class ResourceLoad {
 
     public void parserJson() {
         try {
+            List<NewsInfo> listNewsInfo = new ArrayList<>();
+            listNewsInfo.clear();
             fileList.clear();
+
             JSONObject jsonObject = new JSONObject(urlText);
             if (jsonObject.has("result")){
                 JSONObject result = jsonObject.getJSONObject("result");
@@ -121,24 +161,43 @@ public class ResourceLoad {
                     int stat = result.getInt("stat");
                     if (stat == 1){
                         if (result.has("data")) {
-                            JSONArray data = result.getJSONArray("data");
+                            JSONArray datas = result.getJSONArray("data");
+                            int len = datas.length();
+                            JSONObject tmpJsonObj;
+                            for (int i = 0; i < len; ++i) {
+                                tmpJsonObj = datas.getJSONObject(i);
+                                NewsInfo tmpNewsInfo = new NewsInfo();
+                                if (tmpJsonObj.has("title")) {
+                                    tmpNewsInfo.setTitle(tmpJsonObj.getString("title"));
+                                }
+                                if (tmpJsonObj.has("date")) {
+                                    tmpNewsInfo.setmDate(tmpJsonObj.getString("date"));
+                                }
+                                if (tmpJsonObj.has("category")) {
+                                    tmpNewsInfo.setmCategory(tmpJsonObj.getString("category"));
+                                }
+                                if (tmpJsonObj.has("author_name")) {
+                                    tmpNewsInfo.setmAuthor_name(tmpJsonObj.getString("author_name"));
+                                }
+                                if (tmpJsonObj.has("url")) {
+                                    tmpNewsInfo.setmUrl(tmpJsonObj.getString("url"));
+                                }
+                                if (tmpJsonObj.has("thumbnail_pic_s")) {
+                                    tmpNewsInfo.setmThumbnail_pic_s(tmpJsonObj.getString("thumbnail_pic_s"));
+                                    fileList.add(tmpJsonObj.getString("thumbnail_pic_s"));
+                                }
+                                if (tmpJsonObj.has("thumbnail_pic_s02")) {
+                                    tmpNewsInfo.setmThumbnail_pic_s02(tmpJsonObj.getString("thumbnail_pic_s02"));
+                                    fileList.add(tmpJsonObj.getString("thumbnail_pic_s02"));
+                                }
+                                if (tmpJsonObj.has("thumbnail_pic_s03")) {
+                                    tmpNewsInfo.setmThumbnail_pic_s03(tmpJsonObj.getString("thumbnail_pic_s03"));
+                                    fileList.add(tmpJsonObj.getString("thumbnail_pic_s03"));
+                                }
+                            }
                         }
                     }
                 }
-            }
-
-
-            JSONObject objResult = jsonObject.getJSONObject("result");
-            JSONArray jsonArray = objResult.getJSONArray("data");
-            JSONObject obj;
-            int len = jsonArray.length();
-            String path;
-            Log.i("Web", "------------ 5- ------------ len is: " + len);
-            for (int i = 0; i < len; ++i) {
-                obj = jsonArray.getJSONObject(i);
-                path = obj.getString("thumbnail_pic_s");
-                Log.i("Web", "------------ 6 path is: " + path);
-                fileList.add(path);
             }
 
         } catch (Exception e) {
@@ -167,7 +226,6 @@ public class ResourceLoad {
                     String path = mCursor.getString(mCursor
                             .getColumnIndex(MediaStore.Images.Media.DATA));
                     Log.i("PrintImage:", "-=-=--=-=- path is: " + path);
-//                    for (int i = 0; i < 5; ++i)
                     fileList.add(path);
                 }
 
