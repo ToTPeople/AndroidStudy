@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.example.lfs.androidstudy.ImageLoadHelper;
-import com.example.lfs.androidstudy.ResourceLoad;
 
 import java.io.File;
 import java.util.List;
@@ -42,17 +41,25 @@ class ImageGridAdapter extends BaseAdapter implements AbsListView.OnScrollListen
         isFirstIn = true;
 
         ImageLoadHelper.getInstance().init(listData, mListView);
-        Log.i("Init", "[ImageGridAdapter] data size is: " + listData.size());
+    }
+
+    public void updateData(List<String> data) {
+        if (null != listData) {
+            listData.clear();
+        }
+
+        listData = data;
+        ImageLoadHelper.getInstance().init(listData, mListView);
     }
 
     @Override
     public int getCount() {
-        return listData.size();
+        return (null == listData) ? 0 : listData.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return listData.get(i);
+        return (null == listData) ? 0 : listData.get(i);
     }
 
     @Override
@@ -62,6 +69,10 @@ class ImageGridAdapter extends BaseAdapter implements AbsListView.OnScrollListen
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        if (null == listData) {
+            return view;
+        }
+
         final ImageView imageView;
         if (null == view) {
             RelativeLayout relativeLayout = new RelativeLayout(context);

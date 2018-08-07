@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.lfs.androidstudy.ContentProviderLoad.DataLoadService;
-import com.example.lfs.androidstudy.ContentProviderLoad.ResourseModel;
+import com.example.lfs.androidstudy.ContentProviderLoad.ListViewActivity;
 import com.example.lfs.androidstudy.InternalStorageDemo.InternalStorageDemo;
 
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
                 @Override
                 public void onClick(View v) {
 //                    if (hasNetDataLoadComplete) {
-                        Intent intent = new Intent(MainActivity.this, ResourseModel.class);
+                        Intent intent = new Intent(MainActivity.this, ListViewActivity.class);
                         startActivity(intent);
 //                    } else {
 //                        Toast.makeText(MainActivity.this, "Network data loading, please wait...", Toast.LENGTH_LONG);

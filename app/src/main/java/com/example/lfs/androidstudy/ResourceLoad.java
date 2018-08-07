@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -42,6 +43,7 @@ public class ResourceLoad {
     public boolean has_load_image = false;                  // 本地图片是否已加载
     public boolean has_load_video = false;                  // 本地视频是否已加载
     public boolean has_load_file = false;                   // 本地文件是否已加载
+    public boolean has_load_net_data = false;
     public List<String> fileList = new ArrayList<>();       // 保存 图片、视频、文件 名称
     private String urlText;
     private String savePathDir;                             // 网络下载图片保存到的　文件夹名称
@@ -52,6 +54,10 @@ public class ResourceLoad {
     };
     final static LoadType IMAGE_LOAD_TYPE = LoadType.LOAD_TYPE_DOWNLOAD;       // 使用下载方式
 //    final static LoadType IMAGE_LOAD_TYPE = LoadType.LOAD_TYPE_NEED_GET;       // 使用临时从网络加载获取
+
+    public static final String NOTIFICATION = "network.data.has.load";
+    public static final String RESULT = "result";
+    public static final String IMAGE_DATA = "image_data";
 
     public Context context;
     private static final ResourceLoad ourInstance = new ResourceLoad();         // 单例
@@ -199,7 +205,13 @@ public class ResourceLoad {
             }
 
             //
-            DataLoadService.dataHandler.sendEmptyMessage(DataLoadService.NET_DATA_LOADED);
+            has_load_net_data = true;
+            {
+                Intent intent = new Intent(NOTIFICATION);
+                intent.putExtra(RESULT, 1);
+                context.sendBroadcast(intent);
+            }
+//            DataLoadService.dataHandler.sendEmptyMessage(DataLoadService.NET_DATA_LOADED);
 
         } catch (Exception e) {
             e.printStackTrace();

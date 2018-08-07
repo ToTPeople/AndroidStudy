@@ -50,9 +50,9 @@ public class ImageLoadHelper {
     }
 
     public void init(List<String> data, GridView listView) {
+        int tot = (null == data) ? 0 : data.size();
         mListView = listView;
-        mPaths = new String[data.size()];
-        int tot = data.size();
+        mPaths = new String[tot];
         for (int i = 0; i < tot; ++i) {
             mPaths[i] = data.get(i);
         }
