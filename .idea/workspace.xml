@@ -11,7 +11,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="efbdf406-657e-4b3b-93fa-cab071685979" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ResourseModel.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ListViewActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/javaCompile/classAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/javaCompile/classAnalysis.bin" />
@@ -21,12 +20,10 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ImageGridAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ImageGridAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ImageLoadHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ImageLoadHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/DataLoadService.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/DataLoadService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ListViewActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ListViewActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/MainActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ResourceLoad.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ResourceLoad.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_resourse_model.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_resourse_model.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -53,65 +50,53 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="222">
-              <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+            <state relative-caret-position="165">
+              <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding>
-                <element signature="e#1455#2114#0" expanded="true" />
-                <element signature="e#2113#2114#0" expanded="true" />
                 <element signature="method#startPreparedData#0;class#MainActivity#0" expanded="false" />
-                <element signature="e#3594#4095#0" expanded="true" />
-                <element signature="e#4094#4095#0" expanded="true" />
+                <element signature="e#2689#2955#0" expanded="true" />
+                <element signature="e#2954#2955#0" expanded="true" />
                 <element signature="method#requestPermission#0;class#MainActivity#0" expanded="false" />
-                <element signature="method#onRequestPermissionsResult#0;class#MainActivity#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="76" lean-forward="false" selection-start-line="7" selection-start-column="54" selection-end-line="7" selection-end-column="76" />
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="android-manifest">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ResourceLoad.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ResourceLoad.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ResourceLoad.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-284">
-              <caret line="211" column="46" lean-forward="false" selection-start-line="211" selection-start-column="46" selection-end-line="211" selection-end-column="46" />
+            <state relative-caret-position="1137">
+              <caret line="203" column="55" lean-forward="false" selection-start-line="203" selection-start-column="55" selection-end-line="203" selection-end-column="55" />
               <folding>
-                <element signature="e#2265#2266#0" expanded="true" />
-                <element signature="e#2299#2300#0" expanded="true" />
+                <element signature="e#2372#2373#0" expanded="true" />
+                <element signature="e#2406#2407#0" expanded="true" />
                 <element signature="method#getUrlJsonData#0;class#ResourceLoad#0" expanded="false" />
-                <element signature="e#2527#6105#0" expanded="true" />
-                <element signature="e#6104#6105#0" expanded="true" />
+                <element signature="e#2634#6212#0" expanded="true" />
+                <element signature="e#6211#6212#0" expanded="true" />
                 <element signature="method#getImages#0;class#ResourceLoad#0" expanded="false" />
                 <element signature="method#getVideo#0;class#ResourceLoad#0" expanded="false" />
                 <element signature="method#getFile#0;class#ResourceLoad#0" expanded="false" />
-                <element signature="e#13434#15663#0" expanded="true" />
-                <element signature="e#15662#15663#0" expanded="true" />
+                <element signature="e#13964#16193#0" expanded="true" />
+                <element signature="e#16192#16193#0" expanded="true" />
+                <element signature="e#16253#16254#0" expanded="true" />
+                <element signature="e#16289#16290#0" expanded="true" />
+                <element signature="e#16343#16344#0" expanded="true" />
+                <element signature="e#16393#16394#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ListViewActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ListViewActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ListViewActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="900">
-              <caret line="76" column="86" lean-forward="false" selection-start-line="76" selection-start-column="86" selection-end-line="76" selection-end-column="86" />
+            <state relative-caret-position="259">
+              <caret line="35" column="54" lean-forward="false" selection-start-line="35" selection-start-column="54" selection-end-line="35" selection-end-column="54" />
               <folding>
-                <element signature="e#798#1519#0" expanded="true" />
-                <element signature="e#1518#1519#0" expanded="true" />
-                <element signature="e#2291#2676#0" expanded="true" />
-                <element signature="e#2675#2676#0" expanded="true" />
+                <element signature="e#798#1550#0" expanded="true" />
+                <element signature="e#1549#1550#0" expanded="true" />
+                <element signature="e#2322#2707#0" expanded="true" />
+                <element signature="e#2706#2707#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -120,8 +105,8 @@
       <file leaf-file-name="ImageGridAdapter.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ImageGridAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="51" column="62" lean-forward="false" selection-start-line="51" selection-start-column="62" selection-end-line="51" selection-end-column="62" />
+            <state relative-caret-position="537">
+              <caret line="51" column="0" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1424#1425#0" expanded="true" />
@@ -138,8 +123,8 @@
       <file leaf-file-name="ImageLoadHelper.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ImageLoadHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="199">
-              <caret line="51" column="54" lean-forward="false" selection-start-line="51" selection-start-column="54" selection-end-line="51" selection-end-column="54" />
+            <state relative-caret-position="188">
+              <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
               <folding>
                 <element signature="e#906#907#0" expanded="true" />
                 <element signature="e#940#941#0" expanded="true" />
@@ -151,12 +136,9 @@
       <file leaf-file-name="DataLoadService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/DataLoadService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="21" column="28" lean-forward="false" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
-              <folding>
-                <element signature="e#714#1019#0" expanded="true" />
-                <element signature="e#1018#1019#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-33">
+              <caret line="17" column="33" lean-forward="false" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -187,8 +169,13 @@
       <find>hasDataLoaded</find>
       <find>ResourceLoad</find>
       <find>ImageLoadHelper</find>
-      <find>fileList</find>
+      <find>NET_DATA_LOADED</find>
+      <find>dataHandler</find>
+      <find>receiver</find>
       <find>hasBindService</find>
+      <find>RESULT</find>
+      <find>REQUEST_CODE_ASK_EXTERNAL_STORAGE</find>
+      <find>fileList</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -1912,17 +1899,17 @@
       <list>
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/data/NewsInfo.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/NetDataLoadIntentService.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/DataLoadService.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_internal_storage_demo.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/news_item.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/NewsListItem.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/NewsListAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ImageLoadHelper.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ImageGridAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ResourceLoad.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/DataLoadService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ListViewActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ResourceLoad.java" />
       </list>
     </option>
   </component>
@@ -2317,7 +2304,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1533628995813" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1533631420591" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2365,7 +2352,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1533628995813" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1533631420591" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2559,7 +2546,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1533628995814" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1533631420592" />
       </method>
     </configuration>
     <list size="1">
@@ -2604,7 +2591,7 @@
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32921174" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32921174" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32921174" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -2674,13 +2661,13 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/MainActivity.java</url>
-          <line>45</line>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ResourceLoad.java</url>
+          <line>156</line>
           <properties />
-          <option name="timeStamp" value="26" />
+          <option name="timeStamp" value="33" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="32" />
+      <option name="time" value="34" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -2886,17 +2873,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="76" lean-forward="false" selection-start-line="7" selection-start-column="54" selection-end-line="7" selection-end-column="76" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-manifest">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Documents/AndroidStudio/DeviceExplorer/meitu-mp1512-M6TGLP16B1501268/storage/sdcard0/20180806212345_088ab45de0ee451a33d33ecc2fed94e7_2_mwpm_03200403.jpg">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -2918,22 +2894,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-          <folding>
-            <element signature="e#1455#2114#0" expanded="true" />
-            <element signature="e#2113#2114#0" expanded="true" />
-            <element signature="method#startPreparedData#0;class#MainActivity#0" expanded="false" />
-            <element signature="e#3594#4095#0" expanded="true" />
-            <element signature="e#4094#4095#0" expanded="true" />
-            <element signature="method#requestPermission#0;class#MainActivity#0" expanded="false" />
-            <element signature="method#onRequestPermissionsResult#0;class#MainActivity#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-28/android.jar!/android/content/Intent.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="207">
@@ -2942,21 +2902,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-28/android.jar!/android/os/Bundle.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="118" column="16" lean-forward="false" selection-start-line="118" selection-start-column="16" selection-end-line="118" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="76" lean-forward="false" selection-start-line="7" selection-start-column="54" selection-end-line="7" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-manifest">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/DataLoadService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="21" column="28" lean-forward="false" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
+        <state relative-caret-position="-33">
+          <caret line="17" column="33" lean-forward="false" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
           <folding>
-            <element signature="e#714#1019#0" expanded="true" />
-            <element signature="e#1018#1019#0" expanded="true" />
+            <element signature="method#startPreparedData#0;class#MainActivity#0" expanded="false" />
+            <element signature="e#2689#2955#0" expanded="true" />
+            <element signature="e#2954#2955#0" expanded="true" />
+            <element signature="method#requestPermission#0;class#MainActivity#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ImageLoadHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="51" column="54" lean-forward="false" selection-start-line="51" selection-start-column="54" selection-end-line="51" selection-end-column="54" />
+        <state relative-caret-position="188">
+          <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
           <folding>
             <element signature="e#906#907#0" expanded="true" />
             <element signature="e#940#941#0" expanded="true" />
@@ -2966,8 +2955,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ImageGridAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="51" column="62" lean-forward="false" selection-start-line="51" selection-start-column="62" selection-end-line="51" selection-end-column="62" />
+        <state relative-caret-position="537">
+          <caret line="51" column="0" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1424#1425#0" expanded="true" />
@@ -2980,42 +2969,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-28/android.jar!/android/os/Bundle.class">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ListViewActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="118" column="16" lean-forward="false" selection-start-line="118" selection-start-column="16" selection-end-line="118" selection-end-column="16" />
-          <folding />
+        <state relative-caret-position="259">
+          <caret line="35" column="54" lean-forward="false" selection-start-line="35" selection-start-column="54" selection-end-line="35" selection-end-column="54" />
+          <folding>
+            <element signature="e#798#1550#0" expanded="true" />
+            <element signature="e#1549#1550#0" expanded="true" />
+            <element signature="e#2322#2707#0" expanded="true" />
+            <element signature="e#2706#2707#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ResourceLoad.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-284">
-          <caret line="211" column="46" lean-forward="false" selection-start-line="211" selection-start-column="46" selection-end-line="211" selection-end-column="46" />
+        <state relative-caret-position="1137">
+          <caret line="203" column="55" lean-forward="false" selection-start-line="203" selection-start-column="55" selection-end-line="203" selection-end-column="55" />
           <folding>
-            <element signature="e#2265#2266#0" expanded="true" />
-            <element signature="e#2299#2300#0" expanded="true" />
+            <element signature="e#2372#2373#0" expanded="true" />
+            <element signature="e#2406#2407#0" expanded="true" />
             <element signature="method#getUrlJsonData#0;class#ResourceLoad#0" expanded="false" />
-            <element signature="e#2527#6105#0" expanded="true" />
-            <element signature="e#6104#6105#0" expanded="true" />
+            <element signature="e#2634#6212#0" expanded="true" />
+            <element signature="e#6211#6212#0" expanded="true" />
             <element signature="method#getImages#0;class#ResourceLoad#0" expanded="false" />
             <element signature="method#getVideo#0;class#ResourceLoad#0" expanded="false" />
             <element signature="method#getFile#0;class#ResourceLoad#0" expanded="false" />
-            <element signature="e#13434#15663#0" expanded="true" />
-            <element signature="e#15662#15663#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/lfs/androidstudy/ContentProviderLoad/ListViewActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="900">
-          <caret line="76" column="86" lean-forward="false" selection-start-line="76" selection-start-column="86" selection-end-line="76" selection-end-column="86" />
-          <folding>
-            <element signature="e#798#1519#0" expanded="true" />
-            <element signature="e#1518#1519#0" expanded="true" />
-            <element signature="e#2291#2676#0" expanded="true" />
-            <element signature="e#2675#2676#0" expanded="true" />
+            <element signature="e#13964#16193#0" expanded="true" />
+            <element signature="e#16192#16193#0" expanded="true" />
+            <element signature="e#16253#16254#0" expanded="true" />
+            <element signature="e#16289#16290#0" expanded="true" />
+            <element signature="e#16343#16344#0" expanded="true" />
+            <element signature="e#16393#16394#0" expanded="true" />
           </folding>
         </state>
       </provider>

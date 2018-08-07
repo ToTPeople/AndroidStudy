@@ -1,11 +1,8 @@
 package com.example.lfs.androidstudy;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
@@ -33,26 +30,9 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     private ImageView imageView;
     private static boolean hasDataLoaded = false;
     private static boolean hasBindService = false;
-    private boolean hasNetDataLoadComplete = false;
 
     final public static int REQUEST_CODE_ASK_EXTERNAL_STORAGE = 123;
 
-
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle bundle = intent.getExtras();
-            if (null != bundle) {
-                int resultCode = bundle.getInt(DataLoadService.RESULT);
-                if (RESULT_OK == resultCode) {
-                    hasNetDataLoadComplete = true;
-                    Toast.makeText(MainActivity.this, "Network data load complete!!!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Network data load error!!!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    };
 
     // 启动服务加载数据
     private void startPreparedData() {
@@ -75,9 +55,7 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         // 申请权限
         requestPermission();
 
-        registerReceiver(receiver, new IntentFilter());
-
-        // inter storage
+        // enter inter storage
         btnInterStorage = findViewById(R.id.btnInterStorage);
         if (null != btnInterStorage) {
             btnInterStorage.setOnClickListener(new View.OnClickListener() {
@@ -89,31 +67,21 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
             });
         }
 
-        // exter storage
+        // enter exter storage
         btnExterStorage = findViewById(R.id.btnExteralStorage);
 
-        // listview
+        // enter listview
         btnResourceModel = findViewById(R.id.btnResourceModel);
         if (null != btnResourceModel) {
             btnResourceModel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    if (hasNetDataLoadComplete) {
-                        Intent intent = new Intent(MainActivity.this, ListViewActivity.class);
-                        startActivity(intent);
-//                    } else {
-//                        Toast.makeText(MainActivity.this, "Network data loading, please wait...", Toast.LENGTH_LONG);
-//                    }
+                    Intent intent = new Intent(MainActivity.this, ListViewActivity.class);
+                    startActivity(intent);
                 }
             });
         }
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        unregisterReceiver(receiver);
-        super.onDestroy();
     }
 
     // 申请权限

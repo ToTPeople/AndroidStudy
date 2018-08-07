@@ -29,10 +29,11 @@ public class ListViewActivity extends AppCompatActivity {
             Bundle bundle = intent.getExtras();
             if (null != bundle) {
                 int result = bundle.getInt(ResourceLoad.RESULT);
-//                bundle.getStringArrayList();
+                List<String> fileList = (List<String>) bundle.getSerializable(ResourceLoad.IMAGE_DATA);
+
                 Log.i("BoradCast", "Download result is: " + result);
                 if (1 == result) {
-                    arrayAdapter.updateData(ResourceLoad.getInstance().fileList);
+                    arrayAdapter.updateData(fileList);
                     arrayAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(ListViewActivity.this, "Download failed", Toast.LENGTH_LONG).show();

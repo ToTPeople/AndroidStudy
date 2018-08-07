@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class ResourceLoad {
     public List<String> fileList = new ArrayList<>();       // 保存 图片、视频、文件 名称
     private String urlText;
     private String savePathDir;                             // 网络下载图片保存到的　文件夹名称
+    private int mPerPageCount = 16;                         // ListView每页显示个数
 
     public enum LoadType {
         LOAD_TYPE_DOWNLOAD,                                 // 下载网络图片
@@ -198,6 +200,11 @@ public class ResourceLoad {
                                     tmpNewsInfo.setmThumbnail_pic_s03(path);
                                     saveImg(path);
                                 }
+
+                                if ((i+1)%mPerPageCount == 0) {
+                                    Log.i("Log", "cur i is: " + i);
+                                    sendLoadData();
+                                }
                             }
                         }
                     }
@@ -206,16 +213,25 @@ public class ResourceLoad {
 
             //
             has_load_net_data = true;
-            {
-                Intent intent = new Intent(NOTIFICATION);
-                intent.putExtra(RESULT, 1);
-                context.sendBroadcast(intent);
+
+            if (fileList.size() % mPerPageCount != 0) {
+                Log.i("Log", "cur size is: " + fileList.size());
+                sendLoadData();
             }
-//            DataLoadService.dataHandler.sendEmptyMessage(DataLoadService.NET_DATA_LOADED);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendLoadData() {
+        Intent intent = new Intent(NOTIFICATION);
+        intent.putExtra(RESULT, 1);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(IMAGE_DATA, (Serializable)fileList);
+        intent.putExtras(bundle);
+
+        context.sendBroadcast(intent);
     }
 
     public void saveImg(String path) {
@@ -379,4 +395,11 @@ public class ResourceLoad {
         ).start();
     }
 
+    public int getPerPageCount() {
+        return mPerPageCount;
+    }
+
+    public void setPerPageCount(int mPerPageCount) {
+        this.mPerPageCount = mPerPageCount;
+    }
 }

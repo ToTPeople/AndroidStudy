@@ -17,30 +17,7 @@ public class DataLoadService extends Service {
     private ServiceHandler mServiceHandler;
     private static boolean hasDataLoaded = false;
 
-    public final static String RESULT = "result";
-
-    public final static int NET_DATA_LOADED = 0x10;
-    public final static Handler dataHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case NET_DATA_LOADED:
-                    DataLoadService.publishResults(-1);
-                    break;
-            }
-        }
-
-    };
-
     public DataLoadService() {
-    }
-
-    public final static void publishResults(int result) {
-//        Intent intent = new Intent("com.example.lfs.androidstudy.MainActivity");
-//        intent.putExtra(RESULT, result);
-//        sendBroadcast(intent);
     }
 
     @Override
