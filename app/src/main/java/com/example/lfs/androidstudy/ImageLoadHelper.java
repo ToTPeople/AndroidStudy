@@ -143,21 +143,39 @@ public class ImageLoadHelper {
             String path = params[0];
             Bitmap bitmap = null;
 
-            try {
-                URL myFileUrl = new URL(path);
-                HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
-                conn.setDoInput(true);
-                conn.connect();
-                InputStream is = conn.getInputStream();
-                bitmap = BitmapFactory.decodeStream(is);
-                is.close();
-                conn.disconnect();
+            if (ResourceLoad.LoadType.LOAD_TYPE_DOWNLOAD == ResourceLoad.getInstance().IMAGE_LOAD_TYPE) {
+                //这里同样调用我们的getBitmapFromeUrl
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                //预加载
+                BitmapFactory.decodeFile(path, options);
+                //获取预加载之后的宽高
+                int originalw = options.outWidth;
+                int originalh = options.outHeight;
+                options.inSampleSize = getSimpleSize(originalw, originalh, 300, 250);
+                options.inJustDecodeBounds=false;
 
-                int w = bitmap.getWidth();
-                int h = bitmap.getHeight();
-                bitmap = getBitmap(bitmap, 300, 250);
-                w = bitmap.getWidth();
-                h = bitmap.getHeight();
+                bitmap = BitmapFactory.decodeFile(path, options);
+                if (null != bitmap) {
+                    addBitmapToLrucaches(path, bitmap);
+                }
+            } else {
+                try {
+                    URL myFileUrl = new URL(path);
+                    HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
+                    InputStream is = conn.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                    is.close();
+                    conn.disconnect();
+
+                    int w = bitmap.getWidth();
+                    int h = bitmap.getHeight();
+                    bitmap = getBitmap(bitmap, 300, 250);
+                    w = bitmap.getWidth();
+                    h = bitmap.getHeight();
 
 
 //                URL mUrl = new URL(path);
@@ -165,27 +183,11 @@ public class ImageLoadHelper {
 //                BufferedInputStream is = new BufferedInputStream(connection.getInputStream());
 //                bitmap = BitmapFactory.decodeStream(is);
 //                connection.disconnect();
-            } catch (Exception e) {
-                e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
-
-            //这里同样调用我们的getBitmapFromeUrl
-//            BitmapFactory.Options options = new BitmapFactory.Options();
-//            options.inJustDecodeBounds = true;
-//            options.inPreferredConfig = Bitmap.Config.RGB_565;
-//            //预加载
-//            BitmapFactory.decodeFile(path, options);
-//            //获取预加载之后的宽高
-//            int originalw = options.outWidth;
-//            int originalh = options.outHeight;
-//            options.inSampleSize = getSimpleSize(originalw, originalh, 300, 250);
-//            options.inJustDecodeBounds=false;
-//
-//            Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-            if (null != bitmap) {
-                addBitmapToLrucaches(path, bitmap);
-            }
             return bitmap;
         }
         //这里的bitmap是从doInBackgroud中方法中返回过来的

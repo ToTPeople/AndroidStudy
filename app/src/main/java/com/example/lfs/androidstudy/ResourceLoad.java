@@ -5,7 +5,10 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -21,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -35,46 +39,34 @@ import java.util.List;
  */
 
 public class ResourceLoad {
-    public boolean has_load_image = false;
-    public boolean has_load_video = false;
-    public boolean has_load_file = false;
-    public List<String> fileList = new ArrayList<>();
+    public boolean has_load_image = false;                  // 本地图片是否已加载
+    public boolean has_load_video = false;                  // 本地视频是否已加载
+    public boolean has_load_file = false;                   // 本地文件是否已加载
+    public List<String> fileList = new ArrayList<>();       // 保存 图片、视频、文件 名称
     private String urlText;
-    private final static int SCAN_OK = 1;
-    private ProgressDialog mProgressDialog;
+    private String savePathDir;                             // 网络下载图片保存到的　文件夹名称
+
+    public enum LoadType {
+        LOAD_TYPE_DOWNLOAD,                                 // 下载网络图片
+        LOAD_TYPE_NEED_GET,                                 // 需要时才加载网络图片
+    };
+    final static LoadType IMAGE_LOAD_TYPE = LoadType.LOAD_TYPE_DOWNLOAD;       // 使用下载方式
+//    final static LoadType IMAGE_LOAD_TYPE = LoadType.LOAD_TYPE_NEED_GET;       // 使用临时从网络加载获取
 
     public Context context;
-    private static final ResourceLoad ourInstance = new ResourceLoad();
+    private static final ResourceLoad ourInstance = new ResourceLoad();         // 单例
 
     static public ResourceLoad getInstance() {
         return ourInstance;
     }
 
+    // 构造函数
     private ResourceLoad() {
-        fileList.add("http://03.imgmini.eastday.com/mobile/20180803/20180803144437_aae3a5c3bf5113aa69cac0998e1ab613_2_mwpm_03200403.jpg");
-        fileList.add("http://04.imgmini.eastday.com/mobile/20180803/20180803145041_2afaa556716c3f05a9f1cf9c580a107c_1_mwpm_03200403.jpg");
+        File extStore = Environment.getExternalStorageDirectory();
+        savePathDir = extStore.getAbsolutePath() + "/";
     }
 
-    private Handler mHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case SCAN_OK:
-                    //扫描完毕,关闭进度dialog
-//                    mProgressDialog.dismiss();
-                    parserJson();
-                    break;
-            }
-        }
-
-    };
-
     public void getUrlJsonData() {
-        //显示进度dialog
-//        mProgressDialog = ProgressDialog.show(context, null, "正在加载...");
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -138,8 +130,10 @@ public class ResourceLoad {
                     input.close();
                     httpURLConnection.disconnect();
                     Log.i("Web", "------------ 4- ------------");
-                    //通知Handler扫描图片完成
-                    mHandler.sendEmptyMessage(SCAN_OK);
+
+                    // 加载网络数据完成，解析JSON数据
+                    parserJson();
+
                     Log.i("Web", urlText);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -186,17 +180,17 @@ public class ResourceLoad {
                                 if (tmpJsonObj.has("thumbnail_pic_s")) {
                                     path = tmpJsonObj.getString("thumbnail_pic_s");
                                     tmpNewsInfo.setmThumbnail_pic_s(path);
-                                    fileList.add(path);
+                                    saveImg(path);
                                 }
                                 if (tmpJsonObj.has("thumbnail_pic_s02")) {
                                     path = tmpJsonObj.getString("thumbnail_pic_s02");
                                     tmpNewsInfo.setmThumbnail_pic_s02(path);
-                                    fileList.add(path);
+                                    saveImg(path);
                                 }
                                 if (tmpJsonObj.has("thumbnail_pic_s03")) {
                                     path = tmpJsonObj.getString("thumbnail_pic_s03");
                                     tmpNewsInfo.setmThumbnail_pic_s03(path);
-                                    fileList.add(path);
+                                    saveImg(path);
                                 }
                             }
                         }
@@ -211,6 +205,58 @@ public class ResourceLoad {
             e.printStackTrace();
         }
     }
+
+    public void saveImg(String path) {
+        if (null == path) {
+            return;
+        }
+
+        if (LoadType.LOAD_TYPE_DOWNLOAD == IMAGE_LOAD_TYPE) {
+            String imgName = getFileName(path);
+            String savePath = savePathDir + imgName;
+
+            try {
+                URL myFileUrl = new URL(path);
+                HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+                conn.setDoInput(true);
+                conn.connect();
+                InputStream is = conn.getInputStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                is.close();
+                conn.disconnect();
+
+                File file = new File(savePath);
+                FileOutputStream out = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                out.flush();
+                out.close();
+
+                //保存图片后发送广播通知更新数据库
+                Uri uri = Uri.fromFile(file);
+                context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+
+                path = savePath;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        fileList.add(path);
+    }
+
+    public String getFileName(String pathandname) {
+
+        int start = pathandname.lastIndexOf("/");
+//        int end = pathandname.lastIndexOf(".");
+        int end = pathandname.length();
+        if(start!=-1 && end!=-1){
+            return pathandname.substring(start+1,end);
+        }else{
+            return null;
+        }
+
+    }
+
 
     /**
      * 利用ContentProvider扫描手机中的图片，此方法在运行在子线程中
