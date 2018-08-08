@@ -1,6 +1,5 @@
 package com.example.lfs.androidstudy;
 
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,12 +9,10 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.example.lfs.androidstudy.ContentProviderLoad.DataLoadService;
 import com.example.lfs.androidstudy.data.NewsInfo;
 
 import org.json.JSONArray;
@@ -23,7 +20,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -46,6 +42,7 @@ public class ResourceLoad {
     public boolean has_load_file = false;                   // 本地文件是否已加载
     public boolean has_load_net_data = false;
     public List<String> fileList = new ArrayList<>();       // 保存 图片、视频、文件 名称
+    public List<NewsInfo> mListNewsInfo = new ArrayList<>();        // Json解析数据
     private String urlText;
     private String savePathDir;                             // 网络下载图片保存到的　文件夹名称
     private int mPerPageCount = 16;                         // ListView每页显示个数
@@ -60,6 +57,7 @@ public class ResourceLoad {
     public static final String NOTIFICATION = "network.data.has.load";
     public static final String RESULT = "result";
     public static final String IMAGE_DATA = "image_data";
+    public static final String NEWS_DATA = "news_data";
 
     public Context context;
     private static final ResourceLoad ourInstance = new ResourceLoad();         // 单例
@@ -150,10 +148,14 @@ public class ResourceLoad {
         }).start();
     }
 
+    // 聚合数据Json解析
     public void parserJson() {
         try {
-            List<NewsInfo> listNewsInfo = new ArrayList<>();
-            listNewsInfo.clear();
+            if (null == mListNewsInfo) {
+                mListNewsInfo = new ArrayList<>();
+            } else {
+                mListNewsInfo.clear();
+            }
             fileList.clear();
 
             JSONObject jsonObject = new JSONObject(urlText);
@@ -187,19 +189,21 @@ public class ResourceLoad {
                                 }
                                 if (tmpJsonObj.has("thumbnail_pic_s")) {
                                     path = tmpJsonObj.getString("thumbnail_pic_s");
+                                    path = saveImg(path);
                                     tmpNewsInfo.setmThumbnail_pic_s(path);
-                                    saveImg(path);
                                 }
                                 if (tmpJsonObj.has("thumbnail_pic_s02")) {
                                     path = tmpJsonObj.getString("thumbnail_pic_s02");
+                                    path = saveImg(path);
                                     tmpNewsInfo.setmThumbnail_pic_s02(path);
-                                    saveImg(path);
                                 }
                                 if (tmpJsonObj.has("thumbnail_pic_s03")) {
                                     path = tmpJsonObj.getString("thumbnail_pic_s03");
+                                    path = saveImg(path);
                                     tmpNewsInfo.setmThumbnail_pic_s03(path);
-                                    saveImg(path);
                                 }
+
+                                mListNewsInfo.add(tmpNewsInfo);
 
                                 if ((i+1)%mPerPageCount == 0) {
                                     Log.i("Log", "cur i is: " + i);
@@ -228,15 +232,17 @@ public class ResourceLoad {
         Intent intent = new Intent(NOTIFICATION);
         intent.putExtra(RESULT, 1);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(IMAGE_DATA, (Serializable)fileList);
+//        bundle.putSerializable(IMAGE_DATA, (Serializable)fileList);
+        bundle.putSerializable(NEWS_DATA, (Serializable)mListNewsInfo);
+//        bundle.putParcelable(NEWS_DATA, (Parcelable)mListNewsInfo);
         intent.putExtras(bundle);
 
         context.sendBroadcast(intent);
     }
 
-    public void saveImg(String path) {
+    public String saveImg(String path) {
         if (null == path) {
-            return;
+            return path;
         }
 
         if (LoadType.LOAD_TYPE_DOWNLOAD == IMAGE_LOAD_TYPE) {
@@ -270,6 +276,7 @@ public class ResourceLoad {
         }
 
         fileList.add(path);
+        return path;
     }
 
     public String getFileName(String pathandname) {

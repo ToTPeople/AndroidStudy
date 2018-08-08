@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.lfs.androidstudy.ImageLoadHelper;
 import com.example.lfs.androidstudy.R;
+import com.example.lfs.androidstudy.data.NewsInfo;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class NewsListAdapter extends BaseAdapter implements AbsListView.OnScrollListener {
     private Context context;
-    private List<String> listData;
+    private List<NewsInfo> mListData;
     private ListView mListView;
     private LayoutInflater mInflater;
 
@@ -32,25 +33,33 @@ public class NewsListAdapter extends BaseAdapter implements AbsListView.OnScroll
     private int mEnd;
     private boolean isFirstIn;
 
-    public NewsListAdapter(Context context, List<String> data, ListView listView){
-        if (null != listData) {
-            listData.clear();
+    public NewsListAdapter(Context context, List<NewsInfo> data, ListView listView){
+        if (null != mListData) {
+            mListData.clear();
         }
         this.context = context;
-        listData = data;
+        mListData = data;
         mListView = listView;
         mListView.setOnScrollListener(this);
         isFirstIn = true;
         mInflater = LayoutInflater.from(context);
 
-//        ImageLoadHelper.getInstance().init(listData, mListView);
-        Log.i("Init", "[ImageGridAdapter] data size is: " + listData.size());
+        ImageLoadHelper.getInstance().init(mListData, mListView);
+    }
+
+    public void updateData(List<NewsInfo> data) {
+        if (null != mListData) {
+            mListData.clear();
+        }
+
+        mListData = data;
+        ImageLoadHelper.getInstance().init(mListData, mListView);
     }
 
 
     @Override
     public Object getItem(int i) {
-        return listData.get(i);
+        return (null == mListData) ? 0 : mListData.get(i);
     }
 
     @Override
@@ -60,14 +69,18 @@ public class NewsListAdapter extends BaseAdapter implements AbsListView.OnScroll
 
     @Override
     public int getCount() {
-        return listData.size();
+        return (null == mListData) ? 0 : mListData.size();
     }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         NewsListItem newsListItem = null;
         if (null == view) {
+            newsListItem = new NewsListItem();
             view = mInflater.inflate(R.layout.news_item, null);
+            if (null == view) {
+                return view;
+            }
 
             newsListItem.mImageView = (ImageView) view.findViewById(R.id.img);
             newsListItem.mTitleTextView = (TextView) view.findViewById(R.id.txtTitle);
@@ -78,12 +91,16 @@ public class NewsListAdapter extends BaseAdapter implements AbsListView.OnScroll
             newsListItem = (NewsListItem) view.getTag();
         }
 
-        String path = listData.get(i);
-        if (null != path) {
+        NewsInfo newsInfo = mListData.get(i);
+        if (null != newsInfo) {
+            String path = newsInfo.getmThumbnail_pic_s();
             Log.i("Scroll", "item index: " + i);
 
-//            imageView.setTag(path);
-//            ImageLoadHelper.getInstance().showImage(imageView, path);
+            newsListItem.mImageView.setTag(path);
+            ImageLoadHelper.getInstance().showImage(newsListItem.mImageView, path);
+
+            newsListItem.mTitleTextView.setText(newsInfo.getTitle());
+            newsListItem.mDateTextView.setText(newsInfo.getmDate());
         }
 
         return view;

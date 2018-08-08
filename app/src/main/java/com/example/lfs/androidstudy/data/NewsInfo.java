@@ -1,10 +1,12 @@
 package com.example.lfs.androidstudy.data;
 
+import java.io.Serializable;
+
 /**
  * Created by lfs on 2018/8/3.
  */
 
-public class NewsInfo {
+public class NewsInfo implements Serializable {
 
     public static final int MAX_COUNT = 0;
 

@@ -8,12 +8,11 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.example.lfs.androidstudy.ImageLoadHelper;
+import com.example.lfs.androidstudy.data.NewsInfo;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -22,7 +21,7 @@ import java.util.List;
 
 class ImageGridAdapter extends BaseAdapter implements AbsListView.OnScrollListener {
     private Context context;
-    private List<String> listData;
+    private List<NewsInfo> mListData;
     private GridView mListView;
 
     private int mStart;
@@ -30,36 +29,36 @@ class ImageGridAdapter extends BaseAdapter implements AbsListView.OnScrollListen
     private boolean isFirstIn;
 
 
-    public ImageGridAdapter(Context context, List<String> data, GridView listView){
-        if (null != listData) {
-            listData.clear();
+    public ImageGridAdapter(Context context, List<NewsInfo> data, GridView listView){
+        if (null != mListData) {
+            mListData.clear();
         }
         this.context = context;
-        listData = data;
+        mListData = data;
         mListView = listView;
         mListView.setOnScrollListener(this);
         isFirstIn = true;
 
-        ImageLoadHelper.getInstance().init(listData, mListView);
+        ImageLoadHelper.getInstance().init(mListData, mListView);
     }
 
-    public void updateData(List<String> data) {
-        if (null != listData) {
-            listData.clear();
+    public void updateData(List<NewsInfo> data) {
+        if (null != mListData) {
+            mListData.clear();
         }
 
-        listData = data;
-        ImageLoadHelper.getInstance().init(listData, mListView);
+        mListData = data;
+        ImageLoadHelper.getInstance().init(mListData, mListView);
     }
 
     @Override
     public int getCount() {
-        return (null == listData) ? 0 : listData.size();
+        return (null == mListData) ? 0 : mListData.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return (null == listData) ? 0 : listData.get(i);
+        return (null == mListData) ? 0 : mListData.get(i);
     }
 
     @Override
@@ -69,7 +68,7 @@ class ImageGridAdapter extends BaseAdapter implements AbsListView.OnScrollListen
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if (null == listData) {
+        if (null == mListData) {
             return view;
         }
 
@@ -87,8 +86,10 @@ class ImageGridAdapter extends BaseAdapter implements AbsListView.OnScrollListen
             imageView = (ImageView) view.getTag();
         }
 
-        String path = listData.get(i);
-        if (null != path) {
+        NewsInfo newsInfo = mListData.get(i);
+        if (null != newsInfo) {
+            String path = newsInfo.getmThumbnail_pic_s();
+
             Log.i("Scroll", "item index: " + i);
 
             imageView.setTag(path);

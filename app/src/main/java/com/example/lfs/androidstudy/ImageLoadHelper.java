@@ -7,12 +7,11 @@ import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.LruCache;
-import android.widget.GridView;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 
+import com.example.lfs.androidstudy.data.NewsInfo;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -26,7 +25,7 @@ import java.util.Set;
 
 public class ImageLoadHelper {
     private String mPaths[];
-    private GridView mListView;
+    private View mView;
     private Set<NewsAsyncTask> mTasks;
     private LruCache<String,Bitmap> mMemoryCaches;
     private static final ImageLoadHelper ourInstance = new ImageLoadHelper();
@@ -49,12 +48,14 @@ public class ImageLoadHelper {
         mTasks = new HashSet<NewsAsyncTask>();
     }
 
-    public void init(List<String> data, GridView listView) {
+    //GridView
+    public void init(List<NewsInfo> data, View view) {
         int tot = (null == data) ? 0 : data.size();
-        mListView = listView;
+        mView = view;
         mPaths = new String[tot];
         for (int i = 0; i < tot; ++i) {
-            mPaths[i] = data.get(i);
+//            mPaths[i] = data.get(i);
+            mPaths[i] = data.get(i).getmThumbnail_pic_s();
         }
         Log.i("Init", "[ImageLoadHelper:init] data size is: " + tot);
     }
@@ -76,7 +77,7 @@ public class ImageLoadHelper {
         for (int i = start; i < end; ++i) {
             String path = mPaths[i];
             if (null != path && getBitmapFromLrucache(path) != null) {
-                ImageView imageView = (ImageView) mListView.findViewWithTag(path);
+                ImageView imageView = (ImageView) mView.findViewWithTag(path);
 
                 Log.i("loadImage", "start, end, imageView: " + start + ", " + end + ", " + imageView);
                 Log.i("loadImage", "path: " + path);
@@ -193,7 +194,7 @@ public class ImageLoadHelper {
         //这里的bitmap是从doInBackgroud中方法中返回过来的
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            ImageView imageView = (ImageView)mListView.findViewWithTag(path);
+            ImageView imageView = (ImageView)mView.findViewWithTag(path);
             if (null != imageView) {
                 super.onPostExecute(bitmap);
                 imageView.setImageBitmap(bitmap);
