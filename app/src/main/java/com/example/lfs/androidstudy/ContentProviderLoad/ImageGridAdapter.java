@@ -1,6 +1,7 @@
 package com.example.lfs.androidstudy.ContentProviderLoad;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,15 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
 import com.example.lfs.androidstudy.ImageLoadHelper;
+import com.example.lfs.androidstudy.MainActivity;
+import com.example.lfs.androidstudy.R;
 import com.example.lfs.androidstudy.data.NewsInfo;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -72,7 +79,8 @@ class ImageGridAdapter extends BaseAdapter implements AbsListView.OnScrollListen
             return view;
         }
 
-        final ImageView imageView;
+//        final ImageView imageView;
+        ImageView imageView;
         if (null == view) {
             RelativeLayout relativeLayout = new RelativeLayout(context);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(300, 250);
@@ -92,9 +100,30 @@ class ImageGridAdapter extends BaseAdapter implements AbsListView.OnScrollListen
 
             Log.i("Scroll", "item index: " + i);
 
-            imageView.setTag(path);
-            ImageLoadHelper.getInstance().showImage(imageView, path);
+            // 自定义实现加载
+//            imageView.setTag(path);
+//            ImageLoadHelper.getInstance().showImage(imageView, path);
 
+            // Glide库加载
+//            Glide.with(context)
+//                    .load(path)
+//                    .into(imageView);
+            try {
+//                URL url = new URL(path);
+//                Glide.with(context)
+//                        .load(url)
+//                        .into(imageView);
+
+                Glide.with(context)
+                        .load(path)
+                        .into(imageView).getView();
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // 加载Video封面
             // video add
 //            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND);
 //            bitmap = ThumbnailUtils.extractThumbnail(bitmap, 300, 250);

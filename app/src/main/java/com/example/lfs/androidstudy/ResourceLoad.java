@@ -13,7 +13,11 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.example.lfs.androidstudy.Helper.DomParserXML;
+import com.example.lfs.androidstudy.Helper.PullParserXML;
+import com.example.lfs.androidstudy.Helper.SAXParserXML;
 import com.example.lfs.androidstudy.data.NewsInfo;
+import com.example.lfs.androidstudy.data.StudentData;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,6 +25,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -51,8 +56,8 @@ public class ResourceLoad {
         LOAD_TYPE_DOWNLOAD,                                 // 下载网络图片
         LOAD_TYPE_NEED_GET,                                 // 需要时才加载网络图片
     };
-    final static LoadType IMAGE_LOAD_TYPE = LoadType.LOAD_TYPE_DOWNLOAD;       // 使用下载方式
-//    final static LoadType IMAGE_LOAD_TYPE = LoadType.LOAD_TYPE_NEED_GET;       // 使用临时从网络加载获取
+//    final static LoadType IMAGE_LOAD_TYPE = LoadType.LOAD_TYPE_DOWNLOAD;       // 使用下载方式
+    final static LoadType IMAGE_LOAD_TYPE = LoadType.LOAD_TYPE_NEED_GET;       // 使用临时从网络加载获取
 
     public static final String NOTIFICATION = "network.data.has.load";
     public static final String RESULT = "result";
@@ -408,5 +413,23 @@ public class ResourceLoad {
 
     public void setPerPageCount(int mPerPageCount) {
         this.mPerPageCount = mPerPageCount;
+    }
+
+    public List<StudentData> getListStudentData(String path) {
+        InputStream inputStream = null;
+        try {
+            if (new File(path).exists()) {
+                File file = new File(path);
+                inputStream = new FileInputStream(file);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return SAXParserXML.saxParserXML(inputStream);
+//        return new PullParserXML().getListStudentData(inputStream);
+//        return new DomParserXML().getListStudentData(inputStream);
     }
 }
