@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.example.lfs.androidstudy.Helper.DomParserXML;
+import com.example.lfs.androidstudy.Helper.JsonHelperThread;
 import com.example.lfs.androidstudy.Helper.PullParserXML;
 import com.example.lfs.androidstudy.Helper.SAXParserXML;
 import com.example.lfs.androidstudy.data.NewsInfo;
@@ -35,7 +36,9 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lfs on 2018/8/2.
@@ -47,17 +50,20 @@ public class ResourceLoad {
     public boolean has_load_file = false;                   // 本地文件是否已加载
     public boolean has_load_net_data = false;
     public List<String> fileList = new ArrayList<>();       // 保存 图片、视频、文件 名称
-    public List<NewsInfo> mListNewsInfo = new ArrayList<>();        // Json解析数据
+    private List<NewsInfo> mListNewsInfo = new ArrayList<>();        // Json解析数据
+    private Map<String, Boolean> m_mpNews = new HashMap<String, Boolean>();
     private String urlText;
     private String savePathDir;                             // 网络下载图片保存到的　文件夹名称
     private int mPerPageCount = 16;                         // ListView每页显示个数
+
+    private JsonHelperThread m_threadJsonHelper = null;
 
     public enum LoadType {
         LOAD_TYPE_DOWNLOAD,                                 // 下载网络图片
         LOAD_TYPE_NEED_GET,                                 // 需要时才加载网络图片
     };
-//    final static LoadType IMAGE_LOAD_TYPE = LoadType.LOAD_TYPE_DOWNLOAD;       // 使用下载方式
-    final static LoadType IMAGE_LOAD_TYPE = LoadType.LOAD_TYPE_NEED_GET;       // 使用临时从网络加载获取
+    public final static LoadType IMAGE_LOAD_TYPE = LoadType.LOAD_TYPE_DOWNLOAD;       // 使用下载方式
+//    public final static LoadType IMAGE_LOAD_TYPE = LoadType.LOAD_TYPE_NEED_GET;       // 使用临时从网络加载获取
 
     public static final String NOTIFICATION = "network.data.has.load";
     public static final String RESULT = "result";
@@ -77,80 +83,103 @@ public class ResourceLoad {
         savePathDir = extStore.getAbsolutePath() + "/";
     }
 
-    public void getUrlJsonData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    boolean use_get = true;
-                    use_get = false;
-
-                    String url_s = "http://v.juhe.cn/toutiao/index?type=keji&key=71197f609745fc5bcd254a7c73988994"; // 科技
-                            // "http://v.juhe.cn/toutiao/index?type=guoji&key=71197f609745fc5bcd254a7c73988994";    // 国际
-                            //"http://v.juhe.cn/toutiao/index?type=top&key=71197f609745fc5bcd254a7c73988994";   // 头条
-                    if (!use_get) {
-                        url_s = "http://v.juhe.cn/toutiao/index";
-                    }
-
-                    URL url = new URL(url_s);
-                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-
-                    if (use_get) {
-                        httpURLConnection.setRequestMethod("GET");
-                        httpURLConnection.setConnectTimeout(8000);
-                        httpURLConnection.setReadTimeout(8000);
-                        Log.i("Web", "------------ 1- ------------");
-                        // connect
-                        httpURLConnection.connect();
-                        Log.i("Web", "------------ 2- ------------");
-                    } else {
-                        httpURLConnection.setRequestMethod("POST");
-                        httpURLConnection.setDoOutput(true);
-                        httpURLConnection.setDoInput(true);
-                        httpURLConnection.setUseCaches(false);
-                        httpURLConnection.setInstanceFollowRedirects(true);
-                        httpURLConnection.connect();
-
-                        // output写到上传内容（参数），推到web
-                        OutputStream outputStream = httpURLConnection.getOutputStream();
-                        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, "UTF-8");
-                        BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-                        bufferedWriter.write("type=keji&key=71197f609745fc5bcd254a7c73988994");
-
-                        bufferedWriter.flush();
-
-                        bufferedWriter.close();
-                        outputStream.close();
-                    }
-
-
-                    // 读取web返回数据
-                    InputStream inputStream = httpURLConnection.getInputStream();
-                    InputStreamReader input = new InputStreamReader(inputStream);
-                    BufferedReader bufferedReader = new BufferedReader(input);
-                    if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {   // 200意味着返回的是"OK"
-                        String inputLine;
-                        Log.i("Web", "------------ 3- ------------");
-                        StringBuffer resultData = new StringBuffer();
-                        while ( (inputLine = bufferedReader.readLine()) != null ) {
-                            resultData.append(inputLine);
-                            Log.i("Web", "------------ 3.3- ------------");
-                        }
-                        urlText = resultData.toString();
-                    }
-                    input.close();
-                    httpURLConnection.disconnect();
-                    Log.i("Web", "------------ 4- ------------");
-
-                    // 加载网络数据完成，解析JSON数据
-                    parserJson();
-
-                    Log.i("Web", urlText);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+    public void getListNewsInfo(List<NewsInfo> listInfo) {
+        if (null != listInfo) {
+            m_threadJsonHelper.pauseThread();
+            listInfo.clear();
+            for (int i = 0; i < mListNewsInfo.size(); ++i) {
+                listInfo.add(mListNewsInfo.get(i));
             }
-        }).start();
+            m_threadJsonHelper.resumeThread();
+        }
+    }
+
+    public void getUrlJsonData() {
+        boolean bUse = true;
+//        bUse = false;
+        if (bUse) {
+            if (null == m_threadJsonHelper) {
+                m_threadJsonHelper = new JsonHelperThread(context, mListNewsInfo, savePathDir);
+            }
+            if (null != m_threadJsonHelper) {
+                m_threadJsonHelper.start();
+            }
+        } else {
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        boolean use_get = true;
+                        use_get = false;
+
+                        String url_s = "http://v.juhe.cn/toutiao/index?type=keji&key=71197f609745fc5bcd254a7c73988994"; // 科技
+                        // "http://v.juhe.cn/toutiao/index?type=guoji&key=71197f609745fc5bcd254a7c73988994";    // 国际
+                        //"http://v.juhe.cn/toutiao/index?type=top&key=71197f609745fc5bcd254a7c73988994";   // 头条
+                        if (!use_get) {
+                            url_s = "http://v.juhe.cn/toutiao/index";
+                        }
+
+                        URL url = new URL(url_s);
+                        HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+
+                        if (use_get) {
+                            httpURLConnection.setRequestMethod("GET");
+                            httpURLConnection.setConnectTimeout(8000);
+                            httpURLConnection.setReadTimeout(8000);
+                            Log.i("Web", "------------ 1- ------------");
+                            // connect
+                            httpURLConnection.connect();
+                            Log.i("Web", "------------ 2- ------------");
+                        } else {
+                            httpURLConnection.setRequestMethod("POST");
+                            httpURLConnection.setDoOutput(true);
+                            httpURLConnection.setDoInput(true);
+                            httpURLConnection.setUseCaches(false);
+                            httpURLConnection.setInstanceFollowRedirects(true);
+                            httpURLConnection.connect();
+
+                            // output写到上传内容（参数），推到web
+                            OutputStream outputStream = httpURLConnection.getOutputStream();
+                            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, "UTF-8");
+                            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+                            bufferedWriter.write("type=keji&key=71197f609745fc5bcd254a7c73988994");
+
+                            bufferedWriter.flush();
+
+                            bufferedWriter.close();
+                            outputStream.close();
+                        }
+
+
+                        // 读取web返回数据
+                        InputStream inputStream = httpURLConnection.getInputStream();
+                        InputStreamReader input = new InputStreamReader(inputStream);
+                        BufferedReader bufferedReader = new BufferedReader(input);
+                        if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {   // 200意味着返回的是"OK"
+                            String inputLine;
+                            Log.i("Web", "------------ 3- ------------");
+                            StringBuffer resultData = new StringBuffer();
+                            while ( (inputLine = bufferedReader.readLine()) != null ) {
+                                resultData.append(inputLine);
+                                Log.i("Web", "------------ 3.3- ------------");
+                            }
+                            urlText = resultData.toString();
+                        }
+                        input.close();
+                        httpURLConnection.disconnect();
+                        Log.i("Web", "------------ 4- ------------");
+
+                        // 加载网络数据完成，解析JSON数据
+                        parserJson();
+
+                        Log.i("Web", urlText);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
     }
 
     // 聚合数据Json解析
@@ -177,6 +206,13 @@ public class ResourceLoad {
                             for (int i = 0; i < len; ++i) {
                                 tmpJsonObj = datas.getJSONObject(i);
                                 NewsInfo tmpNewsInfo = new NewsInfo();
+                                if (tmpJsonObj.has("uniquekey")) {
+                                    tmpNewsInfo.setUniquekey(tmpJsonObj.getString("uniquekey"));
+                                    // 有存在，则不重复加载
+                                    if (m_mpNews.containsKey(tmpNewsInfo.getUniquekey())) {
+                                        continue;
+                                    }
+                                }
                                 if (tmpJsonObj.has("title")) {
                                     tmpNewsInfo.setTitle(tmpJsonObj.getString("title"));
                                 }
@@ -208,6 +244,7 @@ public class ResourceLoad {
                                     tmpNewsInfo.setmThumbnail_pic_s03(path);
                                 }
 
+                                m_mpNews.put(tmpNewsInfo.getUniquekey(), true);
                                 mListNewsInfo.add(tmpNewsInfo);
 
                                 if ((i+1)%mPerPageCount == 0) {
@@ -219,9 +256,6 @@ public class ResourceLoad {
                     }
                 }
             }
-
-            //
-            has_load_net_data = true;
 
             if (fileList.size() % mPerPageCount != 0) {
                 Log.i("Log", "cur size is: " + fileList.size());

@@ -1,1 +1,4 @@
-include ':app'
+include ':app', ':utilitytoolbox'
+
+include ':toolbox'
+project(':toolbox').projectDir = new File('../toolbox')
