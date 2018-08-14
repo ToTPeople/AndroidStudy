@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.blankj.utilcode.util.FileIOUtils;
+import com.blankj.utilcode.util.FileUtils;
 import com.example.lfs.androidstudy.ResourceLoad;
 import com.example.lfs.androidstudy.data.NewsInfo;
 
@@ -17,6 +19,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,6 +48,9 @@ public class JsonHelperThread extends Thread {
     public List<NewsInfo> mListNewsInfo;        // Json解析数据
     private Map<String, Boolean> m_mpNews = new HashMap<String, Boolean>();
     private String urlText;
+
+    private final int MAX_SAVE_FILE_COUNT = 5;
+    private int m_nCur = 0;
 
     public JsonHelperThread(Context context, List<NewsInfo> listNewsInfo, String strSavePathDir) {
         super();
@@ -87,8 +93,12 @@ public class JsonHelperThread extends Thread {
     public void run() {
         super.run();
         try {
+            // load news.json from storage
+            boolean bFirstLoad = loadJson();
+
+            // down from network
             boolean use_get = true;
-//            use_get = false;
+            use_get = false;
 
             String url_s = "http://v.juhe.cn/toutiao/index?type=keji&key=71197f609745fc5bcd254a7c73988994"; // 科技
             // "http://v.juhe.cn/toutiao/index?type=guoji&key=71197f609745fc5bcd254a7c73988994";    // 国际
@@ -148,7 +158,7 @@ public class JsonHelperThread extends Thread {
             Log.i("Web", "------------ 4- ------------");
 
             // 加载网络数据完成，解析JSON数据
-            parserJson();
+            parserJson(urlText, true, bFirstLoad);
 
             Log.i("Web", urlText);
         } catch (Exception e) {
@@ -157,16 +167,63 @@ public class JsonHelperThread extends Thread {
         }
     }
 
-    public void parserJson() {
+    public boolean loadJson() {
+        boolean bFirstLoad = true;
+        String strJson;
+        try {
+            for (int i = 0; i < MAX_SAVE_FILE_COUNT; ++i) {
+                strJson = savePathDir + "news_" + i + ".json";
+                Log.i("Load", "Load path is: " + strJson);
+                if (FileUtils.isFileExists(strJson)) {
+                    FileInputStream fileInputStream = new FileInputStream(strJson);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+                    String strLine;
+                    StringBuffer buffer = new StringBuffer();
+                    while ((strLine = reader.readLine()) != null) {
+                        buffer.append(strLine);
+                    }
+                    reader.close();
+                    fileInputStream.close();
+                    parserJson(buffer.toString(), false, bFirstLoad);
+                    bFirstLoad = false;
+                    Log.i("Load", "Load content is: " + buffer.toString());
+                } else {
+                    m_nCur = i;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return bFirstLoad;
+    }
+
+    public void saveJson(JSONObject objSave, String strPath) {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(strPath);
+            Writer writer = new OutputStreamWriter(fileOutputStream);
+
+            writer.write(objSave.toString());
+            writer.close();
+
+            Log.i("Save", "save path is: " + strPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void parserJson(String strText, boolean bIsNet, boolean bFirstIn) {
         try {
             if (null == mListNewsInfo) {
                 mListNewsInfo = new ArrayList<>();
             } else {
-                mListNewsInfo.clear();
+                if (bFirstIn) {
+                    mListNewsInfo.clear();
+                }
             }
-//            fileList.clear();
 
-            JSONObject jsonObject = new JSONObject(urlText);
+            JSONObject jsonObject = new JSONObject(strText);
             if (jsonObject.has("result")){
                 JSONObject result = jsonObject.getJSONObject("result");
                 if (result.has("stat")) {
@@ -210,26 +267,43 @@ public class JsonHelperThread extends Thread {
                                 }
                                 if (tmpJsonObj.has("thumbnail_pic_s")) {
                                     path = tmpJsonObj.getString("thumbnail_pic_s");
-                                    path = saveImg(path);
+                                    if (bIsNet) {
+                                        path = saveImg(path);
+                                    } else {
+                                        String imgName = getFileName(path);
+                                        path = savePathDir + imgName;
+                                    }
                                     tmpNewsInfo.setmThumbnail_pic_s(path);
                                 }
                                 if (tmpJsonObj.has("thumbnail_pic_s02")) {
                                     path = tmpJsonObj.getString("thumbnail_pic_s02");
-                                    path = saveImg(path);
+                                    if (bIsNet) {
+                                        path = saveImg(path);
+                                    } else {
+                                        String imgName = getFileName(path);
+                                        path = savePathDir + imgName;
+                                    }
                                     tmpNewsInfo.setmThumbnail_pic_s02(path);
                                 }
                                 if (tmpJsonObj.has("thumbnail_pic_s03")) {
                                     path = tmpJsonObj.getString("thumbnail_pic_s03");
-                                    path = saveImg(path);
+                                    if (bIsNet) {
+                                        path = saveImg(path);
+                                    } else {
+                                        String imgName = getFileName(path);
+                                        path = savePathDir + imgName;
+                                    }
                                     tmpNewsInfo.setmThumbnail_pic_s03(path);
                                 }
 
                                 m_mpNews.put(tmpNewsInfo.getUniquekey(), true);
                                 mListNewsInfo.add(tmpNewsInfo);
 
-                                if ((nCnt+1)%mPerPageCount == 0) {
-                                    Log.i("Log", "cur i is: " + i);
-                                    sendLoadData();
+                                if (bIsNet) {
+                                    if ((nCnt+1)%mPerPageCount == 0) {
+                                        Log.i("Log", "cur i is: " + i);
+                                        sendLoadData();
+                                    }
                                 }
 
                                 ++nCnt;
@@ -243,11 +317,12 @@ public class JsonHelperThread extends Thread {
                 sendLoadData();
             }
 
-            ResourceLoad.getInstance().has_load_net_data = true;
-//            if (fileList.size() % mPerPageCount != 0) {
-//                Log.i("Log", "cur size is: " + fileList.size());
-//                sendLoadData();
-//            }
+            if (bIsNet) {
+                // save to storage
+                String strJson = savePathDir + "news_" + m_nCur + ".json";
+                saveJson(jsonObject, strJson);
+                m_nCur = (m_nCur + 1) % MAX_SAVE_FILE_COUNT;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -301,7 +376,6 @@ public class JsonHelperThread extends Thread {
             }
         }
 
-//        fileList.add(path);
         return path;
     }
 

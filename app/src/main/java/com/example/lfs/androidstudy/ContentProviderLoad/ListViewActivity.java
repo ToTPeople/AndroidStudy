@@ -112,10 +112,6 @@ public class ListViewActivity extends AppCompatActivity {
             List<NewsInfo> listInfos = new ArrayList<>();
             ResourceLoad.getInstance().getListNewsInfo(listInfos);
             newsListAdapter = new NewsListAdapter(ListViewActivity.this, listInfos, mListView);
-
-//            newsListAdapter = new NewsListAdapter(ListViewActivity.this
-//                    , ResourceLoad.getInstance().has_load_net_data ? ResourceLoad.getInstance().mListNewsInfo : null
-//                    , mListView);
             mListView.setAdapter(newsListAdapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -131,7 +127,6 @@ public class ListViewActivity extends AppCompatActivity {
             });
 
             boolean hasData = (null != listInfos && 0 < listInfos.size());
-//            boolean hasData = (null != ResourceLoad.getInstance().mListNewsInfo && 0 < ResourceLoad.getInstance().mListNewsInfo.size());
             showView(hasData);
         } else {
             listView = new GridView(ListViewActivity.this);
@@ -145,10 +140,6 @@ public class ListViewActivity extends AppCompatActivity {
             List<NewsInfo> listInfos = new ArrayList<>();
             ResourceLoad.getInstance().getListNewsInfo(listInfos);
             arrayAdapter = new ImageGridAdapter(ListViewActivity.this, listInfos, listView);
-
-//            arrayAdapter = new ImageGridAdapter(ListViewActivity.this
-//                    , ResourceLoad.getInstance().has_load_net_data ? ResourceLoad.getInstance().mListNewsInfo : null
-//                    , listView);
             listView.setAdapter(arrayAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

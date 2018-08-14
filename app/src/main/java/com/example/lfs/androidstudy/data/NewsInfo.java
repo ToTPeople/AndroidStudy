@@ -12,7 +12,7 @@ public class NewsInfo implements Serializable {
 
     private static String sName;
 
-    private String uniquekey;
+    private String m_uniquekey;
 
     private String mTitle;          // 标题
     private String mDate;           // 日期
@@ -24,11 +24,11 @@ public class NewsInfo implements Serializable {
     private String mThumbnail_pic_s03;
 
     public String getUniquekey() {
-        return uniquekey;
+        return m_uniquekey;
     }
 
     public void setUniquekey(String uniquekey) {
-        this.uniquekey = uniquekey;
+        this.m_uniquekey = uniquekey;
     }
 
     public String getTitle() {
