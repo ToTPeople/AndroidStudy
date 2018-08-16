@@ -32,24 +32,26 @@ public class LocalFileUtils {
     }
 
     // 删除单个文件
-    public static void delFile(final String path) {
+    public static boolean delFile(final String path) {
         if (isSpace(path)) {
-            return;
+            return false;
         }
 
         File file = new File(path);
         if (file.exists() && file.isFile()) {
-            file.delete();
+            return file.delete();
         }
+        return false;
     }
-    public static void delFile(File file) {
+    public static boolean delFile(File file) {
         if (null == file) {
-            return;
+            return false;
         }
 
         if (file.exists()) {
-            file.delete();
+            return file.delete();
         }
+        return false;
     }
 
     // 删除文件夹及其子文件

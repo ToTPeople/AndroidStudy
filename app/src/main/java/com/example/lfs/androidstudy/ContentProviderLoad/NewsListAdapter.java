@@ -7,13 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.AbsListView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.lfs.androidstudy.ImageLoadHelper;
+import com.example.lfs.androidstudy.Helper.ImageLoadHelper;
 import com.example.lfs.androidstudy.R;
 import com.example.lfs.androidstudy.data.NewsInfo;
 

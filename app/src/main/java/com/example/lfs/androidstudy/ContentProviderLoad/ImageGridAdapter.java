@@ -1,7 +1,6 @@
 package com.example.lfs.androidstudy.ContentProviderLoad;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
@@ -13,20 +12,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.example.lfs.androidstudy.Helper.FrescoLoader;
 import com.example.lfs.androidstudy.Helper.FrescoUtils;
-import com.example.lfs.androidstudy.ImageLoadHelper;
+import com.example.lfs.androidstudy.Helper.ImageLoadHelper;
 import com.example.lfs.androidstudy.Item.FrescoImageItem;
-import com.example.lfs.androidstudy.MainActivity;
 import com.example.lfs.androidstudy.R;
 import com.example.lfs.androidstudy.ResourceLoad;
 import com.example.lfs.androidstudy.data.NewsInfo;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import java.net.URL;
 import java.util.List;
 
 /**

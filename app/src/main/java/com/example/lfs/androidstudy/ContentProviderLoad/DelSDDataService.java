@@ -2,6 +2,7 @@ package com.example.lfs.androidstudy.ContentProviderLoad;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -47,12 +48,23 @@ public class DelSDDataService extends IntentService {
                 for (int i = 0; i < len; ++i) {
                     newsInfo = listInfo.get(i);
                     if (null != newsInfo) {
-                        LocalFileUtils.delFile(newsInfo.getmThumbnail_pic_s());
-                        LocalFileUtils.delFile(newsInfo.getmThumbnail_pic_s02());
-                        LocalFileUtils.delFile(newsInfo.getmThumbnail_pic_s03());
+                        delImageFile(newsInfo.getmThumbnail_pic_s());
+                        delImageFile(newsInfo.getmThumbnail_pic_s02());
+                        delImageFile(newsInfo.getmThumbnail_pic_s03());
                     }
                 }
             }
+        }
+    }
+
+    private void delImageFile(String path) {
+        if (null == path) {
+            return;
+        }
+        if (LocalFileUtils.delFile(path)) {
+            //保存图片后发送广播通知更新数据库
+            Uri uri = Uri.fromFile(new File(path));
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
         }
     }
 }
