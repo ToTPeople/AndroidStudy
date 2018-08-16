@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.FileUtils;
 import com.example.lfs.androidstudy.ResourceLoad;
 import com.example.lfs.androidstudy.data.NewsInfo;
@@ -42,18 +41,16 @@ public class JsonHelperThread extends Thread {
     private Context mContext;
     private final Object lock = new Object();
     private boolean pause = false;
-    private int mPerPageCount = 16;                         // ListView每页显示个数
+    private int mPerPageCount = 1;//6;                         // ListView每页显示个数
     private String savePathDir;                             // 网络下载图片保存到的　文件夹名称
 
     public List<NewsInfo> mListNewsInfo;        // Json解析数据
     private Map<String, Boolean> m_mpNews = new HashMap<String, Boolean>();
     private String urlText;
 
-    private final int MAX_SAVE_FILE_COUNT = 5;
-    private int m_nCur = 0;
-
     public JsonHelperThread(Context context, List<NewsInfo> listNewsInfo, String strSavePathDir) {
         super();
+        super.setName("JsonHelperThread");
         mContext = context;
         mListNewsInfo = listNewsInfo;
         savePathDir = strSavePathDir;
@@ -169,28 +166,22 @@ public class JsonHelperThread extends Thread {
 
     public boolean loadJson() {
         boolean bFirstLoad = true;
-        String strJson;
         try {
-            for (int i = 0; i < MAX_SAVE_FILE_COUNT; ++i) {
-                strJson = savePathDir + "news_" + i + ".json";
-                Log.i("Load", "Load path is: " + strJson);
-                if (FileUtils.isFileExists(strJson)) {
-                    FileInputStream fileInputStream = new FileInputStream(strJson);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
-                    String strLine;
-                    StringBuffer buffer = new StringBuffer();
-                    while ((strLine = reader.readLine()) != null) {
-                        buffer.append(strLine);
-                    }
-                    reader.close();
-                    fileInputStream.close();
-                    parserJson(buffer.toString(), false, bFirstLoad);
-                    bFirstLoad = false;
-                    Log.i("Load", "Load content is: " + buffer.toString());
-                } else {
-                    m_nCur = i;
-                    break;
+            String strJson = savePathDir + "news.json";
+            Log.i("Load", "Load path is: " + strJson);
+            if (FileUtils.isFileExists(strJson)) {
+                FileInputStream fileInputStream = new FileInputStream(strJson);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+                String strLine;
+                StringBuffer buffer = new StringBuffer();
+                while ((strLine = reader.readLine()) != null) {
+                    buffer.append(strLine);
                 }
+                reader.close();
+                fileInputStream.close();
+                parserJson(buffer.toString(), false, bFirstLoad);
+                bFirstLoad = false;
+                Log.i("Load", "Load content is: " + buffer.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -199,12 +190,31 @@ public class JsonHelperThread extends Thread {
         return bFirstLoad;
     }
 
-    public void saveJson(JSONObject objSave, String strPath) {
+    public void saveJson(String strPath) {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(strPath);
             Writer writer = new OutputStreamWriter(fileOutputStream);
 
-            writer.write(objSave.toString());
+            // data array
+            JSONArray jsonDataArray = new JSONArray();
+            int len = mListNewsInfo.size();
+            NewsInfo newsInfo;
+            for (int i = 0; i < len; ++i) {
+                newsInfo = mListNewsInfo.get(i);
+                if (null != newsInfo) {
+                    jsonDataArray.put(newsInfo.toJson());
+                }
+            }
+            // result obj
+            JSONObject jsonResultObject = new JSONObject();
+            jsonResultObject.put("stat", "1");
+            jsonResultObject.put("data", jsonDataArray);
+            // top obj
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("reason", "成功的返回");
+            jsonObject.put("result", jsonResultObject);
+
+            writer.write(jsonObject.toString());
             writer.close();
 
             Log.i("Save", "save path is: " + strPath);
@@ -319,9 +329,8 @@ public class JsonHelperThread extends Thread {
 
             if (bIsNet) {
                 // save to storage
-                String strJson = savePathDir + "news_" + m_nCur + ".json";
-                saveJson(jsonObject, strJson);
-                m_nCur = (m_nCur + 1) % MAX_SAVE_FILE_COUNT;
+                String strJson = savePathDir + "news.json";
+                saveJson(strJson);
             }
 
         } catch (Exception e) {

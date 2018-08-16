@@ -5,4 +5,7 @@ package com.example.lfs.androidstudy.MyTryTest;
  */
 
 public interface UIoperator {
+    void updata();
+    void backTo();
+    void nextTo();
 }

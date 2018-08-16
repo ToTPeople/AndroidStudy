@@ -116,11 +116,11 @@ public class NewsListAdapter extends BaseAdapter implements AbsListView.OnScroll
     }
 
     @Override
-    public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-        mStart = i;
-        mEnd = i + i1;
+    public void onScroll(AbsListView absListView, int nStartPos, int nShowCnt, int i2) {
+        mStart = nStartPos;
+        mEnd = nStartPos + nShowCnt;
 
-        if (isFirstIn && i1 > 0) {
+        if (isFirstIn && nShowCnt > 0) {
             isFirstIn = false;
             ImageLoadHelper.getInstance().loadImages(mStart, mEnd);
         }

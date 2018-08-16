@@ -5,4 +5,6 @@ package com.example.lfs.androidstudy.MyTryTest;
  */
 
 public class FragmentID {
+    public final static int FIRST = 0x00001;
+    public final static int SECOND = 0x00002;
 }

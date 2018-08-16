@@ -62,12 +62,16 @@ public class ResourceLoad {
 
     public void getListNewsInfo(List<NewsInfo> listInfo) {
         if (null != listInfo) {
-            m_threadJsonHelper.pauseThread();
+            if (null != m_threadJsonHelper) {
+                m_threadJsonHelper.pauseThread();
+            }
             listInfo.clear();
             for (int i = 0; i < mListNewsInfo.size(); ++i) {
                 listInfo.add(mListNewsInfo.get(i));
             }
-            m_threadJsonHelper.resumeThread();
+            if (null != m_threadJsonHelper) {
+                m_threadJsonHelper.resumeThread();
+            }
         }
     }
 

@@ -1,9 +1,11 @@
 package com.example.lfs.androidstudy.ContentProviderLoad;
 
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.ScreenUtils;
+import com.example.lfs.androidstudy.Helper.UIHelper;
 import com.example.lfs.androidstudy.R;
 import com.example.lfs.androidstudy.ResourceLoad;
 import com.example.lfs.androidstudy.data.NewsInfo;
@@ -118,11 +121,7 @@ public class ListViewActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Object o = mListView.getItemAtPosition(i);
                     NewsInfo newsInfo = (NewsInfo) o;
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    Uri uri = Uri.parse(newsInfo.getmUrl());
-                    intent.setData(uri);
-//                    startActivity(intent);
-                    startActivity(Intent.createChooser(intent, "选择要使用的浏览器"));
+                    UIHelper.viewUrl(ListViewActivity.this, newsInfo.getmUrl(), null);
                 }
             });
 

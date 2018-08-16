@@ -5,8 +5,10 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,6 +18,7 @@ import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.Utils;
 import com.example.lfs.androidstudy.ContentProviderLoad.DataLoadService;
 import com.example.lfs.androidstudy.ContentProviderLoad.ListViewActivity;
+import com.example.lfs.androidstudy.ContentProviderLoad.NetDataLoadIntentService;
 import com.example.lfs.androidstudy.Helper.FrescoLoader;
 import com.example.lfs.androidstudy.InternalStorageDemo.InternalStorageDemo;
 import com.example.lfs.androidstudy.MyTryTest.TestActivity;
@@ -23,7 +26,7 @@ import com.example.lfs.androidstudy.XMLTest.XMLParserActivity;
 
 
 
-public class MainActivity extends AppCompatActivity implements ServiceConnection {
+public class MainActivity extends AppCompatActivity {
     private Button btnInterStorage;
     private Button btnExterStorage;
     private Button btnResourceModel;
@@ -33,14 +36,38 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     private static boolean hasDataLoaded = false;
     private static boolean hasBindService = false;
 
+    private MyAIDLService myAIDLService;
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            myAIDLService = MyAIDLService.Stub.asInterface(iBinder);
+            try {
+                int result = myAIDLService.plus(3, 5);
+                String upperStr = myAIDLService.toUpperCase("hello world");
+                Log.i("ServiceTest", "result is " + result);
+                Log.i("ServiceTest", "upperStr is " + upperStr);
+                myAIDLService.downNetData();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            //
+        }
+    };
+
     // 启动服务加载数据
     private void startPreparedData() {
         if (!hasBindService) {
             hasBindService = true;
 //            Intent intent = new Intent(MainActivity.this, NetDataLoadIntentService.class);
+//            intent.setAction(NetDataLoadIntentService.ACTION_GET_NET_DATA);
+
             Intent intent = new Intent(MainActivity.this, DataLoadService.class);
             startService(intent);                                                   // 启动服务
-//            bindService(intent, MainActivity.this, Context.BIND_AUTO_CREATE);     // 绑定启动服务
+//            bindService(intent, serviceConnection, BIND_AUTO_CREATE);     // 绑定启动服务
         }
     }
 
@@ -48,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.i("ServiceTest", "[MainActivity:onCreate] process id: " + android.os.Process.myPid());
 
         Utils.init(this);
         ResourceLoad.getInstance().context = MainActivity.this;
@@ -120,16 +149,6 @@ public class MainActivity extends AppCompatActivity implements ServiceConnection
         PermissionUtils permissionUtils = PermissionUtils.permission(permissionArray);
         permissionUtils.callback(new DealPermission());
         permissionUtils.request();
-    }
-
-    @Override
-    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-        //
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName componentName) {
-        //
     }
 
     // 权限请求回调
