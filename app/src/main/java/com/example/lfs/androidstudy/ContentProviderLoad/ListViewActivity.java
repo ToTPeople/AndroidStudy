@@ -1,12 +1,10 @@
 package com.example.lfs.androidstudy.ContentProviderLoad;
 
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.ScreenUtils;
+import com.example.lfs.androidstudy.Helper.ReceiverUtils;
 import com.example.lfs.androidstudy.Helper.UIHelper;
 import com.example.lfs.androidstudy.R;
 import com.example.lfs.androidstudy.ResourceLoad;
@@ -43,12 +42,13 @@ public class ListViewActivity extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i("BroadCast_Test", "[onReceive]");
             Bundle bundle = intent.getExtras();
             if (null != bundle) {
                 int result = bundle.getInt(ResourceLoad.RESULT);
                 List<NewsInfo> newsList = (List<NewsInfo>) bundle.getSerializable(ResourceLoad.NEWS_DATA);
 
-                Log.i("BoradCast", "Download result is: " + result);
+                Log.i("BoradCast", "Download result is: " + result + ", newsList: " + newsList.size());
                 if (1 == result) {
                     if (use_list_view) {
                         if (null != newsList) {
@@ -155,13 +155,13 @@ public class ListViewActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(broadcastReceiver, new IntentFilter(ResourceLoad.NOTIFICATION));
+        ReceiverUtils.registerLocalReceiver(broadcastReceiver, new IntentFilter(ResourceLoad.NOTIFICATION));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(broadcastReceiver);
+        ReceiverUtils.unregisterLocalReceiver(broadcastReceiver);
     }
 }
 

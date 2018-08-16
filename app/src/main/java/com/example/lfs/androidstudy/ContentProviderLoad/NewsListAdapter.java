@@ -49,10 +49,11 @@ public class NewsListAdapter extends BaseAdapter implements AbsListView.OnScroll
 
     public void updateData(List<NewsInfo> data) {
         if (null != mListData) {
-            mListData.clear();
+//            mListData.clear();
         }
 
         mListData = data;
+        Log.i("BoradCast", "mListData: " + mListData + ", data: " + data);
         ImageLoadHelper.getInstance().init(mListData, mListView);
     }
 

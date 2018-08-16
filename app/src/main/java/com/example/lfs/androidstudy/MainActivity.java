@@ -12,14 +12,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.Utils;
-import com.example.lfs.androidstudy.ContentProviderLoad.DataLoadService;
+import com.example.lfs.androidstudy.ContentProviderLoad.DelSDDataService;
 import com.example.lfs.androidstudy.ContentProviderLoad.ListViewActivity;
 import com.example.lfs.androidstudy.ContentProviderLoad.NetDataLoadIntentService;
 import com.example.lfs.androidstudy.Helper.FrescoLoader;
+import com.example.lfs.androidstudy.Helper.ReceiverUtils;
 import com.example.lfs.androidstudy.InternalStorageDemo.InternalStorageDemo;
 import com.example.lfs.androidstudy.MyTryTest.TestActivity;
 import com.example.lfs.androidstudy.XMLTest.XMLParserActivity;
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
     private static boolean hasDataLoaded = false;
     private static boolean hasBindService = false;
+    private static boolean bDelData = false;
 
     private MyAIDLService myAIDLService;
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -62,10 +63,10 @@ public class MainActivity extends AppCompatActivity {
     private void startPreparedData() {
         if (!hasBindService) {
             hasBindService = true;
-//            Intent intent = new Intent(MainActivity.this, NetDataLoadIntentService.class);
-//            intent.setAction(NetDataLoadIntentService.ACTION_GET_NET_DATA);
+            Intent intent = new Intent(MainActivity.this, NetDataLoadIntentService.class);
+            intent.setAction(NetDataLoadIntentService.ACTION_GET_NET_DATA);
 
-            Intent intent = new Intent(MainActivity.this, DataLoadService.class);
+//            Intent intent = new Intent(MainActivity.this, DataLoadService.class);
             startService(intent);                                                   // 启动服务
 //            bindService(intent, serviceConnection, BIND_AUTO_CREATE);     // 绑定启动服务
         }
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("ServiceTest", "[MainActivity:onCreate] process id: " + android.os.Process.myPid());
 
         Utils.init(this);
+        ReceiverUtils.init(this);
         ResourceLoad.getInstance().context = MainActivity.this;
         FrescoLoader.getInstance().init(this);
 
@@ -106,8 +108,23 @@ public class MainActivity extends AppCompatActivity {
             btnResourceModel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, ListViewActivity.class);
-                    startActivity(intent);
+//                    if (bDelData) {
+//                        ToastUtils.showShort("Del data!!!");
+//                    } else {
+                        Intent intent = new Intent(MainActivity.this, ListViewActivity.class);
+                        startActivity(intent);
+//                    }
+                }
+            });
+            btnResourceModel.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    bDelData = true;
+                    Intent intent = new Intent(MainActivity.this, DelSDDataService.class);
+                    intent.setAction(DelSDDataService.ACTION_DEL_DATA);
+                    startService(intent);
+
+                    return false;
                 }
             });
         }

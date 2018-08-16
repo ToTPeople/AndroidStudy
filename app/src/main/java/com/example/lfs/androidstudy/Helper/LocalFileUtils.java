@@ -2,6 +2,8 @@ package com.example.lfs.androidstudy.Helper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +21,7 @@ public class LocalFileUtils {
     }
 
     public static boolean isFileExists(final String filePath) {
-        if (null == filePath) {
+        if (isSpace(filePath)) {
             return false;
         }
         File file = new File(filePath);
@@ -27,6 +29,75 @@ public class LocalFileUtils {
             return false;
         }
         return true;
+    }
+
+    // 删除单个文件
+    public static void delFile(final String path) {
+        if (isSpace(path)) {
+            return;
+        }
+
+        File file = new File(path);
+        if (file.exists() && file.isFile()) {
+            file.delete();
+        }
+    }
+    public static void delFile(File file) {
+        if (null == file) {
+            return;
+        }
+
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    // 删除文件夹及其子文件
+    public static void delDirector(final String path) {
+        if (isSpace(path)) {
+            return;
+        }
+
+        File dir = new File(path);
+        if (!dir.exists()) {
+            return;
+        }
+        if (dir.isFile()) {
+            delFile(dir);
+        } else if (dir.isDirectory()) {
+            for (File file : dir.listFiles()) {
+            }
+
+            dir.delete();
+        }
+    }
+    public static void delDirector(File dir) {
+        if (null == dir || !dir.exists()) {
+            return;
+        }
+
+        if (dir.isFile()) {
+            dir.delete();
+        } else if (dir.isDirectory()) {
+            for (File file : dir.listFiles()) {
+                delDirector(file);
+            }
+            dir.delete();
+        }
+    }
+
+    // 创建SD Directory
+    public static boolean createSDDirectory(final String path) {
+        if (isSpace(path)) {
+            return false;
+        }
+
+        File dir = new File(path);
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Log.e("LocalFileUtils", "Cread SD directory fail, SD card not mount!!!");
+        }
+
+        return dir.mkdir();
     }
 
     // 获取SD卡目录下文件输入流

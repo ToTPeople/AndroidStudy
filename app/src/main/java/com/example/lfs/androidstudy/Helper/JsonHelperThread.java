@@ -48,6 +48,8 @@ public class JsonHelperThread extends Thread {
     private Map<String, Boolean> m_mpNews = new HashMap<String, Boolean>();
     private String urlText;
 
+    private final static String RECEIVER_LIMIT = "com.example.lfs.androidstudy.MyReceiver";
+
     public JsonHelperThread(Context context, List<NewsInfo> listNewsInfo, String strSavePathDir) {
         super();
         super.setName("JsonHelperThread");
@@ -344,10 +346,9 @@ public class JsonHelperThread extends Thread {
         Bundle bundle = new Bundle();
 //        bundle.putSerializable(IMAGE_DATA, (Serializable)fileList);
         bundle.putSerializable(ResourceLoad.getInstance().NEWS_DATA, (Serializable)mListNewsInfo);
-//        bundle.putParcelable(NEWS_DATA, (Parcelable)mListNewsInfo);
         intent.putExtras(bundle);
 
-        mContext.sendBroadcast(intent);
+        ReceiverUtils.sendLocalBroadcast(intent);
     }
 
     public String saveImg(String path) {
