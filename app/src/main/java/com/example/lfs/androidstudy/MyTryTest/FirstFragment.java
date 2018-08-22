@@ -33,7 +33,7 @@ public class FirstFragment extends BaseFragment implements View.OnClickListener 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 //        return super.onCreateView(inflater, container, savedInstanceState);
-        Log.i("Fragment lift", "[onCreateView]");
+        Log.i("Fragment lift", "[FirstFragment onCreateView]");
 
         RelativeLayout relativeLayout = new RelativeLayout(getContext());
 //        relativeLayout.setBackgroundColor(0xfff00fff);
@@ -109,60 +109,60 @@ public class FirstFragment extends BaseFragment implements View.OnClickListener 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i("Fragment lift", "[onActivityCreated]");
+        Log.i("Fragment lift", "[FirstFragment onActivityCreated]");
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i("Fragment lift", "[onAttach]");
+        Log.i("Fragment lift", "[FirstFragment onAttach]");
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("Fragment lift", "[onCreate]");
+        Log.i("Fragment lift", "[FirstFragment onCreate]");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.i("Fragment lift", "[onStart]");
+        Log.i("Fragment lift", "[FirstFragment onStart]");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.i("Fragment lift", "[onStop]");
+        Log.i("Fragment lift", "[FirstFragment onStop]");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.i("Fragment lift", "[onPause]");
+        Log.i("Fragment lift", "[FirstFragment onPause]");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("Fragment lift", "[onResume]");
+        Log.i("Fragment lift", "[FirstFragment onResume]");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.i("Fragment lift", "[onDestroyView]");
+        Log.i("Fragment lift", "[FirstFragment onDestroyView]");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("Fragment lift", "[onDestroy]");
+        Log.i("Fragment lift", "[FirstFragment onDestroy]");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i("Fragment lift", "[onDetach]");
+        Log.i("Fragment lift", "[FirstFragment onDetach]");
     }
 }

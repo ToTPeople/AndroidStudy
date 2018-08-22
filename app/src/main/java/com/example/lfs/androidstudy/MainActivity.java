@@ -15,9 +15,11 @@ import android.widget.ImageView;
 
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.Utils;
+import com.example.lfs.androidstudy.ContentProviderLoad.DataLoadService;
 import com.example.lfs.androidstudy.ContentProviderLoad.DelSDDataService;
 import com.example.lfs.androidstudy.ContentProviderLoad.ListViewActivity;
 import com.example.lfs.androidstudy.ContentProviderLoad.NetDataLoadIntentService;
+import com.example.lfs.androidstudy.ContentProviderLoad.NotificationService;
 import com.example.lfs.androidstudy.Helper.FrescoLoader;
 import com.example.lfs.androidstudy.Helper.ReceiverUtils;
 import com.example.lfs.androidstudy.InternalStorageDemo.InternalStorageDemo;
@@ -63,11 +65,11 @@ public class MainActivity extends AppCompatActivity {
     private void startPreparedData() {
         if (!hasBindService) {
             hasBindService = true;
-            Intent intent = new Intent(MainActivity.this, NetDataLoadIntentService.class);
-            intent.setAction(NetDataLoadIntentService.ACTION_GET_NET_DATA);
+//            Intent intent = new Intent(MainActivity.this, NetDataLoadIntentService.class);
+//            intent.setAction(NetDataLoadIntentService.ACTION_GET_NET_DATA);
 
 //            Intent intent = new Intent(MainActivity.this, DataLoadService.class);
-            startService(intent);                                                   // 启动服务
+//            startService(intent);                                                   // 启动服务
 //            bindService(intent, serviceConnection, BIND_AUTO_CREATE);     // 绑定启动服务
         }
     }

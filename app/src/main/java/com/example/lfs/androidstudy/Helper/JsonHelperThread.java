@@ -1,14 +1,22 @@
 package com.example.lfs.androidstudy.Helper;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.blankj.utilcode.util.FileUtils;
+import com.example.lfs.androidstudy.ContentProviderLoad.NotificationService;
+import com.example.lfs.androidstudy.MainActivity;
+import com.example.lfs.androidstudy.R;
 import com.example.lfs.androidstudy.ResourceLoad;
 import com.example.lfs.androidstudy.data.NewsInfo;
 
@@ -160,6 +168,11 @@ public class JsonHelperThread extends Thread {
             parserJson(urlText, true, bFirstLoad);
 
             Log.i("Web", urlText);
+            //////----------
+            // 通知网络数据已下载完成
+            Intent intent = new Intent(mContext, NotificationService.class);
+            mContext.startService(intent);
+            //////----------
         } catch (Exception e) {
             //捕获到异常之后，执行break跳出循环
             e.printStackTrace();

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.example.lfs.androidstudy.Demo.MapTraversing;
 import com.example.lfs.androidstudy.R;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class TestActivity extends FragmentActivity implements UIoperator {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
+        Log.i("Fragment lift", "[TestActivity onCreate]");
 
         m_btnPause = findViewById(R.id.btnPause);
         if (null != m_btnPause) {
@@ -56,12 +58,6 @@ public class TestActivity extends FragmentActivity implements UIoperator {
                         m_bPressed = !m_bPressed;
                     } else if (TestType.TEST_TYPE_FRAGMENT_ADD == m_eTestType) {
                         onOpenFragment(FragmentID.FIRST);
-//                        if (null != m_firstFragment) {
-//                            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-////                            fragmentTransaction.replace(R.id.layoutTryTest, m_firstFragment);
-//                            fragmentTransaction.add(R.id.layoutTryTest, m_firstFragment);
-//                            fragmentTransaction.commit();
-//                        }
                     }
                 }
             });
@@ -151,6 +147,41 @@ public class TestActivity extends FragmentActivity implements UIoperator {
                 m_btnPause.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("Fragment lift", "[TestActivity onStart]");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("Fragment lift", "[TestActivity onStop]");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("Fragment lift", "[TestActivity onResume]");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("Fragment lift", "[TestActivity onPause]");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i("Fragment lift", "[TestActivity onRestart]");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     private class MyThread extends Thread {
